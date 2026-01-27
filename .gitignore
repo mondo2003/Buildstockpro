@@ -1,0 +1,13 @@
+# Environment files
+.env.supabase
+.env.*
+
+# Dependencies
+node_modules/
+
+# Embedded git repositories
+BMAD-METHOD/
+Construction-RC/
+
+# OS files
+.DS_Store
