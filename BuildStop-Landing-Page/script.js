@@ -1,59 +1,104 @@
+/**
+ * BuildStop Pro - Interactive Scripts
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Mobile Menu Toggle
+    // Elements
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const navList = document.querySelector('.nav-list');
     const header = document.querySelector('.header');
 
-    mobileMenuBtn.addEventListener('click', () => {
-        navList.classList.toggle('active');
-        mobileMenuBtn.classList.toggle('open');
+    // Mobile Menu Toggle
+    if (mobileMenuBtn && navList) {
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenuBtn.classList.toggle('active');
+            navList.classList.toggle('active');
+        });
 
-        // Enhance: Animate hamburger icon
-        if (mobileMenuBtn.classList.contains('open')) {
-            mobileMenuBtn.querySelector('span:nth-child(1)').style.transform = 'rotate(45deg) translate(5px, 5px)';
-            mobileMenuBtn.querySelector('span:nth-child(2)').style.opacity = '0';
-            mobileMenuBtn.querySelector('span:nth-child(3)').style.transform = 'rotate(-45deg) translate(5px, -5px)';
-        } else {
-            mobileMenuBtn.querySelectorAll('span').forEach(span => span.style = '');
-        }
-    });
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenuBtn.contains(e.target) && !navList.contains(e.target)) {
+                mobileMenuBtn.classList.remove('active');
+                navList.classList.remove('active');
+            }
+        });
+    }
 
     // Smooth Scrolling for Anchor Links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            // Close mobile menu if open
-            if (navList.classList.contains('active')) {
-                navList.classList.remove('active');
-                mobileMenuBtn.classList.remove('open');
-                mobileMenuBtn.querySelectorAll('span').forEach(span => span.style = '');
-            }
-
             const targetId = this.getAttribute('href');
+
+            // Don't prevent default for empty anchors
             if (targetId === '#') return;
 
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
+                e.preventDefault();
+
+                // Close mobile menu if open
+                if (mobileMenuBtn && navList) {
+                    mobileMenuBtn.classList.remove('active');
+                    navList.classList.remove('active');
+                }
+
                 // Account for fixed header height
-                const headerHeight = header.offsetHeight;
+                const headerHeight = header ? header.offsetHeight : 0;
                 const elementPosition = targetElement.getBoundingClientRect().top;
                 const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
 
                 window.scrollTo({
                     top: offsetPosition,
-                    behavior: "smooth"
+                    behavior: 'smooth'
                 });
             }
         });
     });
 
-    // Optional: Add scroll effect to header
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-            header.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
-        } else {
-            header.style.boxShadow = '0 2px 4px rgba(0,0,0,0.05)';
-        }
+    // Header Scroll Effect
+    if (header) {
+        let lastScroll = 0;
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            // Add/remove scrolled class based on scroll position
+            if (currentScroll > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+
+            lastScroll = currentScroll;
+        }, { passive: true });
+    }
+
+    // Add reveal on scroll animation
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Observe elements for animation
+    document.querySelectorAll('.feature-card, .product-card, .section-header').forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
     });
 });
+
+// Reserve button handler
+function handleReserve() {
+    // Redirect to the main app's search page
+    window.location.href = 'http://localhost:3000/search';
+}

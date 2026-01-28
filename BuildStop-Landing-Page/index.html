@@ -16,12 +16,12 @@
 <body>
     <header class="header">
         <div class="container header-container">
-            <a href="#" class="logo">BuildStop <span class="highlight">Pro</span></a>
+            <a href="/" class="logo">BuildStop <span class="highlight">Pro</span></a>
             <nav class="nav">
                 <ul class="nav-list">
                     <li><a href="#features">Features</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact" class="btn btn-secondary">Contact Us</a></li>
+                    <li><a href="http://localhost:3000/search">Search</a></li>
+                    <li><a href="http://localhost:3000" class="btn btn-secondary">Get Started</a></li>
                 </ul>
                 <button class="mobile-menu-btn" aria-label="Toggle Menu">
                     <span></span>
@@ -40,7 +40,8 @@
                     <p class="hero-text">Find the closest in-stock materials, check their carbon footprint, and build
                         with confidence using rated eco-friendly products.</p>
                     <div class="hero-actions">
-                        <a href="#demo" class="btn btn-primary">Find Materials Nearby</a>
+                        <a href="http://localhost:3000/search" class="btn btn-primary">Find Materials Nearby</a>
+                        <a href="http://localhost:3000" class="btn btn-outline">Browse All Materials</a>
                     </div>
                 </div>
 
@@ -79,7 +80,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-sm btn-primary full-width">Reserve for Pickup</button>
+                            <button class="btn btn-sm btn-primary full-width" onclick="handleReserve()">Reserve for Pickup</button>
                         </div>
                     </div>
                 </div>
@@ -93,24 +94,33 @@
                     <p>The only app that combines real-time stock availability with sustainability data.</p>
                 </div>
                 <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="icon-box">📍</div>
-                        <h3>Local Pickup</h3>
-                        <p>Instant gratification. accurate stock levels at merchants near you for same-day collection.
-                        </p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="icon-box">🌱</div>
-                        <h3>Eco-Intelligence</h3>
-                        <p>Make informed choices. See the carbon footprint and eco-credentials of every product before
-                            you buy.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="icon-box">⭐</div>
-                        <h3>Quality Assurance</h3>
-                        <p>Don't guess quality. verified star ratings and detailed descriptions from fellow
-                            tradespeople.</p>
-                    </div>
+                    <a href="http://localhost:3000/search" class="feature-card-link">
+                        <div class="feature-card">
+                            <div class="icon-box">📍</div>
+                            <h3>Local Pickup</h3>
+                            <p>Instant gratification. Accurate stock levels at merchants near you for same-day collection.
+                            </p>
+                            <span class="feature-link">Search Now →</span>
+                        </div>
+                    </a>
+                    <a href="http://localhost:3000/dashboard" class="feature-card-link">
+                        <div class="feature-card">
+                            <div class="icon-box">🌱</div>
+                            <h3>Eco-Intelligence</h3>
+                            <p>Make informed choices. See the carbon footprint and eco-credentials of every product before
+                                you buy.</p>
+                            <span class="feature-link">View Dashboard →</span>
+                        </div>
+                    </a>
+                    <a href="http://localhost:3000/profile/stats" class="feature-card-link">
+                        <div class="feature-card">
+                            <div class="icon-box">⭐</div>
+                            <h3>Quality Assurance</h3>
+                            <p>Don't guess quality. Verified star ratings and detailed descriptions from fellow
+                                tradespeople.</p>
+                            <span class="feature-link">See Stats →</span>
+                        </div>
+                    </a>
                 </div>
             </div>
         </section>
@@ -119,7 +129,7 @@
             <div class="container">
                 <h2>Ready to Optimize Your Site?</h2>
                 <p>Join thousands of contractors building smarter with BuildStop Pro.</p>
-                <a href="#" class="btn btn-primary btn-large">Request a Demo</a>
+                <a href="http://localhost:3000" class="btn btn-primary btn-large">Get Started Free</a>
             </div>
         </section>
     </main>
@@ -127,7 +137,7 @@
     <footer class="footer">
         <div class="container footer-content">
             <div class="footer-brand">
-                <a href="#" class="logo">BuildStop <span class="highlight">Pro</span></a>
+                <a href="/" class="logo">BuildStop <span class="highlight">Pro</span></a>
                 <p>&copy; 2024 BuildStop Pro. All rights reserved.</p>
             </div>
             <div class="footer-links">
