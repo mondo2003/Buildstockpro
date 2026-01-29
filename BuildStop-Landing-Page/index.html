@@ -10,7 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="/styles.css">
 </head>
 
 <body>
@@ -20,8 +20,9 @@
             <nav class="nav">
                 <ul class="nav-list">
                     <li><a href="#features">Features</a></li>
-                    <li><a href="http://localhost:3000/search">Search</a></li>
-                    <li><a href="http://localhost:3000" class="btn btn-secondary">Get Started</a></li>
+                    <li><a href="/search">Search</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="/" class="btn btn-secondary">Get Started</a></li>
                 </ul>
                 <button class="mobile-menu-btn" aria-label="Toggle Menu">
                     <span></span>
@@ -39,9 +40,13 @@
                     <h1>Sustainable Building Materials, <span class="text-gradient">Available Today</span></h1>
                     <p class="hero-text">Find the closest in-stock materials, check their carbon footprint, and build
                         with confidence using rated eco-friendly products.</p>
+                    <div class="hero-search">
+                        <input type="text" id="heroSearchInput" placeholder="Search for materials (e.g., insulation, lumber, concrete...)" class="hero-search-input" />
+                        <button onclick="handleHeroSearch()" class="btn btn-primary btn-search">Search</button>
+                    </div>
                     <div class="hero-actions">
-                        <a href="http://localhost:3000/search" class="btn btn-primary">Find Materials Nearby</a>
-                        <a href="http://localhost:3000" class="btn btn-outline">Browse All Materials</a>
+                        <a href="/search" class="btn btn-primary">Find Materials Nearby</a>
+                        <a href="/" class="btn btn-outline">Browse All Materials</a>
                     </div>
                 </div>
 
@@ -94,7 +99,7 @@
                     <p>The only app that combines real-time stock availability with sustainability data.</p>
                 </div>
                 <div class="features-grid">
-                    <a href="http://localhost:3000/search" class="feature-card-link">
+                    <a href="/search" class="feature-card-link">
                         <div class="feature-card">
                             <div class="icon-box">📍</div>
                             <h3>Local Pickup</h3>
@@ -103,7 +108,7 @@
                             <span class="feature-link">Search Now →</span>
                         </div>
                     </a>
-                    <a href="http://localhost:3000/dashboard" class="feature-card-link">
+                    <a href="/dashboard" class="feature-card-link">
                         <div class="feature-card">
                             <div class="icon-box">🌱</div>
                             <h3>Eco-Intelligence</h3>
@@ -112,7 +117,7 @@
                             <span class="feature-link">View Dashboard →</span>
                         </div>
                     </a>
-                    <a href="http://localhost:3000/profile/stats" class="feature-card-link">
+                    <a href="/profile/stats" class="feature-card-link">
                         <div class="feature-card">
                             <div class="icon-box">⭐</div>
                             <h3>Quality Assurance</h3>
@@ -129,7 +134,72 @@
             <div class="container">
                 <h2>Ready to Optimize Your Site?</h2>
                 <p>Join thousands of contractors building smarter with BuildStop Pro.</p>
-                <a href="http://localhost:3000" class="btn btn-primary btn-large">Get Started Free</a>
+                <a href="/" class="btn btn-primary btn-large">Get Started Free</a>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Get in Touch</h2>
+                    <p>Have questions? We'd love to hear from you.</p>
+                </div>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <h3>Contact Information</h3>
+                        <div class="contact-item">
+                            <span class="icon">📧</span>
+                            <div>
+                                <strong>Email</strong>
+                                <a href="mailto:support@buildstoppro.com">support@buildstoppro.com</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <span class="icon">📍</span>
+                            <div>
+                                <strong>Address</strong>
+                                <p>BuildStop Pro<br>United Kingdom</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <span class="icon">🕐</span>
+                            <div>
+                                <strong>Support Hours</strong>
+                                <p>Monday - Friday: 8am - 6pm<br>Saturday: 9am - 1pm</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-form-container">
+                        <h3>Send us a Message</h3>
+                        <form class="contact-form" onsubmit="handleContactSubmit(event)">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" required placeholder="Your name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required placeholder="your@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <select id="subject" name="subject" required>
+                                    <option value="">Select a subject</option>
+                                    <option value="general">General Inquiry</option>
+                                    <option value="support">Technical Support</option>
+                                    <option value="sales">Sales Question</option>
+                                    <option value="feedback">Feedback</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" rows="5" required placeholder="How can we help you?"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary full-width">Send Message</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
@@ -141,13 +211,14 @@
                 <p>&copy; 2024 BuildStop Pro. All rights reserved.</p>
             </div>
             <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
+                <a href="/privacy">Privacy Policy</a>
+                <a href="/terms">Terms of Service</a>
+                <a href="#contact">Contact Us</a>
             </div>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="/script.js"></script>
 </body>
 
 </html>

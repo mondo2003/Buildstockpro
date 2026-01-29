@@ -102,3 +102,61 @@ function handleReserve() {
     // Redirect to the main app's search page
     window.location.href = 'http://localhost:3000/search';
 }
+
+// Hero search handler
+function handleHeroSearch() {
+    const searchInput = document.getElementById('heroSearchInput');
+    const query = searchInput.value.trim();
+
+    if (query) {
+        // Redirect to the main app's search page with the query
+        window.location.href = `http://localhost:3000/search?q=${encodeURIComponent(query)}`;
+    } else {
+        // If no query, just go to search page
+        window.location.href = 'http://localhost:3000/search';
+    }
+}
+
+// Allow Enter key to trigger search
+document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('heroSearchInput');
+    if (searchInput) {
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handleHeroSearch();
+            }
+        });
+    }
+});
+
+// Contact form handler
+function handleContactSubmit(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new FormData(form);
+    const data = {
+        name: formData.get('name'),
+        email: formData.get('email'),
+        subject: formData.get('subject'),
+        message: formData.get('message')
+    };
+
+    // In production, this would send to your backend API
+    // For now, we'll show a success message and redirect to email
+    const subject = encodeURIComponent(`BuildStop Pro Contact: ${data.subject}`);
+    const body = encodeURIComponent(
+        `Name: ${data.name}\n` +
+        `Email: ${data.email}\n\n` +
+        `Message:\n${data.message}`
+    );
+
+    // Open email client with pre-filled information
+    window.location.href = `mailto:support@buildstoppro.com?subject=${subject}&body=${body}`;
+
+    // Show success message
+    alert('Thank you for your message! Your email client has been opened with your message pre-filled.');
+
+    // Reset form
+    form.reset();
+}

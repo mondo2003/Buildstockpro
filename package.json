@@ -1,0 +1,22 @@
+{
+  "name": "buildstock-pro-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "buildstock-pro/frontend",
+    "buildstock-pro/backend",
+    "Construction-RC/src/frontend",
+    "Construction-RC/src/backend",
+    "Construction-RC/src/database",
+    "BMAD-METHOD"
+  ],
+  "scripts": {
+    "dev": "bun run dev:all",
+    "dev:all": "bun run --filter '*' dev",
+    "clean": "bun run clean:cache && bun run clean:deps",
+    "clean:cache": "find . -type d -name '.next' -prune -exec rm -rf {} + 2>/dev/null || true",
+    "clean:deps": "find . -name 'node_modules' -type d -prune -exec rm -rf {} + 2>/dev/null || true",
+    "clean:all": "bun run clean && rm -rf node_modules",
+    "install:all": "bun install"
+  }
+}
