@@ -37,6 +37,7 @@ export const mockProducts: Product[] = [
         phone: '020 7123 4567',
         website: 'https://buildbase.co.uk',
         stock: 42,
+        sameDayCollection: true,
       },
       {
         id: 's2',
@@ -46,6 +47,7 @@ export const mockProducts: Product[] = [
         phone: '020 7234 5678',
         website: 'https://travisperkins.com',
         stock: 28,
+        sameDayCollection: true,
       },
     ],
     location: {
@@ -92,6 +94,7 @@ export const mockProducts: Product[] = [
         phone: '020 7234 5678',
         website: 'https://travisperkins.com',
         stock: 28,
+        sameDayCollection: true,
       },
     ],
     location: {
