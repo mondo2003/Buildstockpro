@@ -5,7 +5,8 @@
   "main": "script.js",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && npm run copy:static",
+    "copy:static": "cp config.js script.js styles.css dist/",
     "preview": "vite preview"
   },
   "keywords": [],

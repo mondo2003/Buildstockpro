@@ -51,7 +51,30 @@ export function ProductCard({
     e.preventDefault();
     e.stopPropagation();
 
-    if (!nearestSupplier || product.stock.level === 'out-of-stock') return;
+    // Safety checks
+    if (!product.suppliers || product.suppliers.length === 0) {
+      toast.error('Not available', {
+        description: 'This product is not available from any supplier',
+        duration: 3000,
+      });
+      return;
+    }
+
+    if (product.stock.level === 'out-of-stock') {
+      toast.error('Out of stock', {
+        description: 'This product is currently out of stock',
+        duration: 3000,
+      });
+      return;
+    }
+
+    if (!nearestSupplier) {
+      toast.error('Error', {
+        description: 'Could not find supplier information',
+        duration: 3000,
+      });
+      return;
+    }
 
     setIsReserving(true);
     try {
@@ -61,10 +84,18 @@ export function ProductCard({
       // Show success feedback
       setAddedToCart(true);
 
-      // Show toast notification
+      // Show toast notification with action to visit supplier
       toast.success('Added to cart', {
         description: `${product.name} has been added to your cart`,
-        duration: 2000,
+        action: {
+          label: 'View on Supplier Website',
+          onClick: () => {
+            if (nearestSupplier.website) {
+              window.open(nearestSupplier.website, '_blank');
+            }
+          },
+        },
+        duration: 5000,
       });
 
       // Reset success state after 2 seconds
@@ -76,6 +107,12 @@ export function ProductCard({
       if (onReserve) {
         await onReserve(product.id, nearestSupplier.id);
       }
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+      toast.error('Error', {
+        description: 'Failed to add item to cart. Please try again.',
+        duration: 3000,
+      });
     } finally {
       setIsReserving(false);
     }
@@ -345,51 +382,69 @@ export function ProductCard({
         </CardContent>
 
         <CardFooter className="pt-3 border-t">
-          <div className="flex items-center justify-between w-full">
+          <div className="flex items-center justify-between w-full gap-2">
             <div>
               <p className="text-2xl font-bold">£{product.price.toFixed(2)}</p>
               <p className="text-xs text-muted-foreground">per {product.unit}</p>
             </div>
 
-            {product.stock.level === 'out-of-stock' ? (
-              <Button
-                size="sm"
-                variant="outline"
-                disabled
-                className="shadow-md hover:shadow-lg transition-shadow"
-              >
-                Unavailable
-              </Button>
-            ) : (
-              <Button
-                size="sm"
-                onClick={handleReserve}
-                disabled={isReserving}
-                className={cn(
-                  'shadow-md hover:shadow-lg transition-shadow group/btn',
-                  addedToCart && 'bg-accent hover:bg-accent'
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  {isReserving ? (
-                    <>
-                      <span className="animate-spin">⟳</span>
-                      Adding...
-                    </>
-                  ) : addedToCart ? (
-                    <>
-                      <Check className="w-4 h-4" />
-                      Added!
-                    </>
-                  ) : (
-                    <>
-                      <ShoppingCart className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
-                      Add to Cart
-                    </>
+            <div className="flex gap-2">
+              {nearestSupplier && nearestSupplier.website && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(nearestSupplier.website, '_blank');
+                  }}
+                  className="shadow-md hover:shadow-lg transition-shadow"
+                  title="View on supplier website"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </Button>
+              )}
+
+              {product.stock.level === 'out-of-stock' ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  disabled
+                  className="shadow-md hover:shadow-lg transition-shadow"
+                >
+                  Unavailable
+                </Button>
+              ) : (
+                <Button
+                  size="sm"
+                  onClick={handleReserve}
+                  disabled={isReserving}
+                  className={cn(
+                    'shadow-md hover:shadow-lg transition-shadow group/btn',
+                    addedToCart && 'bg-accent hover:bg-accent'
                   )}
-                </div>
-              </Button>
-            )}
+                >
+                  <div className="flex items-center gap-2">
+                    {isReserving ? (
+                      <>
+                        <span className="animate-spin">⟳</span>
+                        Adding...
+                      </>
+                    ) : addedToCart ? (
+                      <>
+                        <Check className="w-4 h-4" />
+                        Added!
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+                        Add to Cart
+                      </>
+                    )}
+                  </div>
+                </Button>
+              )}
+            </div>
           </div>
         </CardFooter>
 

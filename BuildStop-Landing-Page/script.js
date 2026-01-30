@@ -55,6 +55,55 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Handle dynamic app links - scroll to contact section
+    document.querySelectorAll('a[data-app-link]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetElement = document.querySelector('#contact');
+            if (targetElement) {
+                const headerHeight = header ? header.offsetHeight : 0;
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Handle root links - scroll to contact section
+    document.querySelectorAll('a[href="/"]').forEach(link => {
+        // Skip if it's a nav link or has data-app-link attribute
+        if (!link.hasAttribute('data-app-link') && !link.closest('.nav')) {
+            link.addEventListener('click', function(e) {
+                // Check if this should scroll to contact
+                const text = this.textContent.trim().toLowerCase();
+                const shouldScrollToContact = text.includes('get started') ||
+                                     text.includes('browse all') ||
+                                     text.includes('started');
+
+                if (shouldScrollToContact) {
+                    e.preventDefault();
+                    // Scroll to contact section
+                    const targetElement = document.querySelector('#contact');
+                    if (targetElement) {
+                        const headerHeight = header ? header.offsetHeight : 0;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerHeight;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+                // Logo clicks will naturally scroll to top (default behavior)
+            });
+        }
+    });
+
     // Header Scroll Effect
     if (header) {
         let lastScroll = 0;
@@ -99,8 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Reserve button handler
 function handleReserve() {
-    // Redirect to the main app's search page
-    window.location.href = 'http://localhost:3000/search';
+    alert('🛒 Reservation feature coming soon!\n\nWe\'re working hard to bring you the ability to reserve items for pickup. Stay tuned!');
 }
 
 // Hero search handler
@@ -109,11 +157,9 @@ function handleHeroSearch() {
     const query = searchInput.value.trim();
 
     if (query) {
-        // Redirect to the main app's search page with the query
-        window.location.href = `http://localhost:3000/search?q=${encodeURIComponent(query)}`;
+        alert(`🔍 Search for "${query}"\n\nSearch functionality coming soon! We\'re working hard to bring you real-time inventory search across local merchants.`);
     } else {
-        // If no query, just go to search page
-        window.location.href = 'http://localhost:3000/search';
+        alert('🔍 Search coming soon!\n\nWe\'re working hard to bring you real-time inventory search across local merchants.');
     }
 }
 

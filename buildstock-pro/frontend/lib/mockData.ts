@@ -776,7 +776,9 @@ function expandSearchQuery(query: string): string[] {
 
 // Helper function to get filtered products
 export function getFilteredProducts(filters: SearchFilters = {}): SearchResults {
+  console.log('getFilteredProducts called with filters:', filters);
   let filtered = [...mockProducts];
+  console.log('Starting with', filtered.length, 'products');
 
   // Filter by query
   if (filters.query) {
@@ -785,11 +787,18 @@ export function getFilteredProducts(filters: SearchFilters = {}): SearchResults 
       const searchText = `${p.name} ${p.description} ${p.category} ${p.tags.join(' ')}`.toLowerCase();
       return searchTerms.some(term => searchText.includes(term));
     });
+    console.log('After query filter:', filtered.length, 'products');
   }
 
   // Filter by categories
   if (filters.category && filters.category.length > 0) {
-    filtered = filtered.filter((p) => filters.category!.includes(p.category));
+    console.log('Filtering by categories:', filters.category);
+    filtered = filtered.filter((p) => {
+      const matches = filters.category!.includes(p.category);
+      console.log(`Product "${p.name}" has category "${p.category}":`, matches);
+      return matches;
+    });
+    console.log('After category filter:', filtered.length, 'products');
   }
 
   // Filter by price range

@@ -1,0 +1,7 @@
+{
+  "name": "buildstock-landing",
+  "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": null
+}

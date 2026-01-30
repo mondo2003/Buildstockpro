@@ -65,6 +65,32 @@ export interface Merchant {
   updatedAt: Date;
 }
 
+// Search term aliases for common user queries
+const SEARCH_ALIASES: Record<string, string[]> = {
+  'wood': ['timber', 'lumber', 'plywood', 'wooden'],
+  'timber': ['wood', 'lumber'],
+  'lumber': ['wood', 'timber'],
+  'screw': ['screws'],
+  'nail': ['nails'],
+  'paint': ['paints', 'coating'],
+  'insulation': ['insulator'],
+};
+
+// Expand search term with aliases
+function expandSearchTerm(search: string): string[] {
+  const normalized = search.toLowerCase().trim();
+  const terms = [search];
+
+  // Add all aliases for this search term
+  for (const [key, aliases] of Object.entries(SEARCH_ALIASES)) {
+    if (normalized.includes(key) || key.includes(normalized)) {
+      terms.push(...aliases);
+    }
+  }
+
+  return Array.from(new Set(terms)); // Remove duplicates
+}
+
 export async function getProducts(
   page: number = 1,
   limit: number = 20,
@@ -74,33 +100,38 @@ export async function getProducts(
   sortBy?: string
 ): Promise<{ products: Product[]; total: number }> {
   const offset = (page - 1) * limit;
-  let whereClause = '';
+  const conditions: string[] = [];
   const params: any[] = [];
 
   if (search) {
-    whereClause += ' WHERE (name ILIKE $1 OR description ILIKE $1 OR brand ILIKE $1)';
-    params.push(`%${search}%`);
+    const searchTerms = expandSearchTerm(search);
+
+    // Build ILIKE conditions for each search term across name, description, category
+    const searchConditions: string[] = [];
+    searchTerms.forEach(term => {
+      const paramIdx = params.length + 1;
+      searchConditions.push(`name ILIKE $${paramIdx}`, `description ILIKE $${paramIdx}`, `category ILIKE $${paramIdx}`);
+      params.push(`%${term}%`);
+      params.push(`%${term}%`);
+      params.push(`%${term}%`);
+    });
+
+    conditions.push(`(${searchConditions.join(' OR ')})`);
   }
 
   if (category) {
-    const paramIndex = params.length + 1;
-    if (whereClause) {
-      whereClause += ` AND category = $${paramIndex}`;
-    } else {
-      whereClause += ` WHERE category = $${paramIndex}`;
-    }
+    const paramIdx = params.length + 1;
+    conditions.push(`category = $${paramIdx}`);
     params.push(category);
   }
 
   if (brand) {
-    const paramIndex = params.length + 1;
-    if (whereClause) {
-      whereClause += ` AND brand = $${paramIndex}`;
-    } else {
-      whereClause += ` WHERE brand = $${paramIndex}`;
-    }
+    const paramIdx = params.length + 1;
+    conditions.push(`brand = $${paramIdx}`);
     params.push(brand);
   }
+
+  const whereClause = conditions.length > 0 ? ` WHERE ${conditions.join(' AND ')}` : '';
 
   const countResult = await queryOne(
     `SELECT COUNT(*) as count FROM products${whereClause}`,

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuildStop Pro - Construction Logistics Simplified</title>
+    <meta name="description"
+        content="Streamline your construction logistics with BuildStop Pro. Manage inventory, track deliveries, and control costs in real-time.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <!-- Load config before other scripts -->
+    <script src="/config.js"></script>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container header-container">
+            <a href="/" class="logo">BuildStop <span class="highlight">Pro</span></a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#" data-app-link="search">Search</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#contact" class="btn btn-secondary">Get Started</a></li>
+                </ul>
+                <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <h1>Sustainable Building Materials, <span class="text-gradient">Available Today</span></h1>
+                    <p class="hero-text">Find the closest in-stock materials, check their carbon footprint, and build
+                        with confidence using rated eco-friendly products.</p>
+                    <div class="hero-search">
+                        <input type="text" id="heroSearchInput" placeholder="Search for materials (e.g., insulation, lumber, concrete...)" class="hero-search-input" />
+                        <button onclick="handleHeroSearch()" class="btn btn-primary btn-search">Search</button>
+                    </div>
+                    <div class="hero-actions">
+                        <a href="#contact" class="btn btn-primary">Find Materials Nearby</a>
+                        <a href="#contact" class="btn btn-outline">Browse All Materials</a>
+                    </div>
+                </div>
+
+                <!-- Mock Product Card Demo -->
+                <div class="product-demo">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <div class="badge-eco">🌿 Eco-Friendly</div>
+                        </div>
+                        <div class="product-details">
+                            <h3>Recycled Insulation Roll</h3>
+                            <p class="product-desc">High-performance thermal insulation made from 80% recycled glass.
+                                significantly reduces heat loss.</p>
+
+                            <div class="product-meta">
+                                <div class="rating">
+                                    <span class="stars">★★★★☆</span>
+                                    <span class="count">(128)</span>
+                                </div>
+                                <div class="carbon-stat">
+                                    <span class="label">Carbon Footprint:</span>
+                                    <span class="value low">12kg CO2e</span>
+                                </div>
+                            </div>
+
+                            <div class="availability">
+                                <div class="store-info">
+                                    <span class="icon">📍</span>
+                                    <div>
+                                        <strong>BuildBase - Camden</strong>
+                                        <span class="distance">0.8 miles away</span>
+                                    </div>
+                                </div>
+                                <div class="status in-stock">
+                                    ● In Stock (42 rolls)
+                                </div>
+                            </div>
+
+                            <button class="btn btn-sm btn-primary full-width" onclick="handleReserve()">Reserve for Pickup</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Build Smarter, Build Greener</h2>
+                    <p>The only app that combines real-time stock availability with sustainability data.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card-link" onclick="showBetaModal(event)" style="cursor: pointer;">
+                        <div class="feature-card">
+                            <div class="icon-box">📍</div>
+                            <h3>Local Pickup</h3>
+                            <p>Instant gratification. Accurate stock levels at merchants near you for same-day collection.
+                            </p>
+                            <span class="feature-link">Search Now →</span>
+                        </div>
+                    </div>
+                    <div class="feature-card-link" onclick="showBetaModal(event)" style="cursor: pointer;">
+                        <div class="feature-card">
+                            <div class="icon-box">🌱</div>
+                            <h3>Eco-Intelligence</h3>
+                            <p>Make informed choices. See the carbon footprint and eco-credentials of every product before
+                                you buy.</p>
+                            <span class="feature-link">View Dashboard →</span>
+                        </div>
+                    </div>
+                    <div class="feature-card-link" onclick="showBetaModal(event)" style="cursor: pointer;">
+                        <div class="feature-card">
+                            <div class="icon-box">⭐</div>
+                            <h3>Quality Assurance</h3>
+                            <p>Don't guess quality. Verified star ratings and detailed descriptions from fellow
+                                tradespeople.</p>
+                            <span class="feature-link">See Stats →</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <div class="container">
+                <h2>Ready to Optimize Your Site?</h2>
+                <p>Join thousands of contractors building smarter with BuildStop Pro.</p>
+                <a href="#contact" class="btn btn-primary btn-large">Get Started Free</a>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Get in Touch</h2>
+                    <p>Have questions? We'd love to hear from you.</p>
+                </div>
+                <div class="contact-content">
+                    <div class="contact-info">
+                        <h3>Contact Information</h3>
+                        <div class="contact-item">
+                            <span class="icon">📧</span>
+                            <div>
+                                <strong>Email</strong>
+                                <a href="mailto:support@buildstoppro.com">support@buildstoppro.com</a>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <span class="icon">📍</span>
+                            <div>
+                                <strong>Address</strong>
+                                <p>BuildStop Pro<br>United Kingdom</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <span class="icon">🕐</span>
+                            <div>
+                                <strong>Support Hours</strong>
+                                <p>Monday - Friday: 8am - 6pm<br>Saturday: 9am - 1pm</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="contact-form-container">
+                        <h3>Send us a Message</h3>
+                        <form class="contact-form" onsubmit="handleContactSubmit(event)">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" id="name" name="name" required placeholder="Your name">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required placeholder="your@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="subject">Subject</label>
+                                <select id="subject" name="subject" required>
+                                    <option value="">Select a subject</option>
+                                    <option value="general">General Inquiry</option>
+                                    <option value="support">Technical Support</option>
+                                    <option value="sales">Sales Question</option>
+                                    <option value="feedback">Feedback</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" rows="5" required placeholder="How can we help you?"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary full-width">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <a href="/" class="logo">BuildStop <span class="highlight">Pro</span></a>
+                <p>&copy; 2024 BuildStop Pro. All rights reserved.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#" data-app-link="privacy">Privacy Policy</a>
+                <a href="#" data-app-link="terms">Terms of Service</a>
+                <a href="#contact">Contact Us</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Beta Modal -->
+    <div id="betaModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeBetaModal()">&times;</span>
+            <div class="modal-header">
+                <h2>🚀 Coming Soon</h2>
+            </div>
+            <div class="modal-body">
+                <p>BuildStop Pro is currently in <strong>beta testing</strong>!</p>
+                <p>We're working hard to bring you the best construction materials search experience. Join our waitlist to be notified when we launch.</p>
+                <div class="modal-actions">
+                    <a href="#contact" onclick="closeBetaModal()" class="btn btn-primary">Join Waitlist</a>
+                    <button onclick="closeBetaModal()" class="btn btn-outline">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+</body>
+
+</html>

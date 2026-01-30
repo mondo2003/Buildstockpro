@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug BuildStop</title>
+</head>
+<body>
+    <h1>BuildStop Debug Page</h1>
+    <p>Check console for errors</p>
+    
+    <div class="hero-search">
+        <input type="text" id="heroSearchInput" placeholder="Search for materials" />
+        <button onclick="handleHeroSearch()" class="btn btn-primary btn-search">Search</button>
+    </div>
+    
+    <button onclick="handleReserve()">Reserve for Pickup</button>
+    
+    <script>
+        // Load the actual script
+        document.write('<script src="/script.js"><\/script>');
+        
+        // Test function availability
+        setTimeout(() => {
+            console.log('handleHeroSearch exists:', typeof handleHeroSearch === 'function');
+            console.log('handleReserve exists:', typeof handleReserve === 'function');
+            console.log('handleContactSubmit exists:', typeof handleContactSubmit === 'function');
+            
+            // Test button clicks
+            document.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    console.log('Button clicked:', e.target.textContent);
+                }
+            });
+        }, 1000);
+    </script>
+</body>
+</html>

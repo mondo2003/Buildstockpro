@@ -1,0 +1,339 @@
+BUILDSTOCK PRO - CI/CD FILE STRUCTURE
+======================================
+
+Repository Root
+├── .github/
+│   └── workflows/
+│       ├── ci-cd.yml                  (366 lines) - Main CI/CD Pipeline
+│       ├── merchant-sync.yml          (202 lines) - Scheduled Merchant Sync
+│       ├── README.md                  (220 lines) - Workflow Documentation
+│       └── example-secrets.txt        (150 lines) - Configuration Template
+│
+├── buildstock-pro/
+│   └── backend/
+│       └── src/
+│           └── scripts/
+│               └── sync-merchants.ts  (100 lines) - Sync Script
+│
+├── CI-CD-SETUP.md                     (434 lines) - Comprehensive Setup Guide
+├── CI-CD-QUICK-REF.md                 (286 lines) - Quick Reference
+├── CI-CD-IMPLEMENTATION-SUMMARY.md    (396 lines) - This Summary
+└── CI-CD-FILE-STRUCTURE.txt           (This file)
+
+TOTAL: 2,150+ lines of documentation and configuration
+
+
+WORKFLOW FILES OVERVIEW
+=======================
+
+1. ci-cd.yml (Main CI/CD Pipeline)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   Triggers:
+   • Push to main or develop
+   • Pull requests to main or develop
+   
+   Jobs (9 total):
+   ├─ frontend-lint          ESLint + TypeScript
+   ├─ frontend-build         Build Next.js app
+   ├─ backend-lint           ESLint + TypeScript
+   ├─ backend-test           Run tests
+   ├─ backend-build          Verify build
+   ├─ deploy-backend         Deploy to Railway (main only)
+   ├─ deploy-frontend        Deploy to Vercel (main only)
+   ├─ smoke-tests            Test production (main only)
+   └─ notify-failure         Slack/email on failure
+   
+   Features:
+   • Parallel job execution
+   • Dependency caching
+   • Artifact uploads
+   • PR comments with URLs
+   • Post-deployment testing
+   • Notification system
+
+
+2. merchant-sync.yml (Scheduled Sync Job)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   Triggers:
+   • Scheduled: Daily at 2 AM UTC
+   • Manual: Via GitHub Actions UI
+   • Push: When sync files change
+   
+   Jobs (2 total):
+   ├─ merchant-sync          Sync product data
+   └─ sync-health-check      Verify sync success
+   
+   Features:
+   • Multi-merchant support
+   • Force sync option
+   • Sync reports (30-day retention)
+   • Success/failure notifications
+   • Health verification
+
+
+DOCUMENTATION FILES
+===================
+
+1. CI-CD-SETUP.md
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   Sections:
+   • Overview and prerequisites
+   • Required secrets (19 total)
+   • Required variables (5 total)
+   • Secret generation methods
+   • Step-by-step setup for each platform
+   • Workflow features explained
+   • Testing procedures
+   • Troubleshooting guide
+   • Security best practices
+   • Maintenance guidelines
+   • Environment-specific configs
+   • Advanced configuration
+   • Support resources
+   
+   Best for: First-time setup, comprehensive reference
+
+
+2. CI-CD-QUICK-REF.md
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   Sections:
+   • Quick setup commands
+   • Secrets checklist (copy-paste)
+   • Variables checklist
+   • Common commands
+   • Workflow triggers
+   • What happens when...
+   • Quick troubleshooting
+   • Environment variables reference
+   • Key file locations
+   • URLs to remember
+   
+   Best for: Daily use, quick lookups
+
+
+3. .github/workflows/README.md
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   Sections:
+   • Workflow descriptions
+   • Setup instructions
+   • Usage examples
+   • Monitoring workflows
+   • Troubleshooting
+   • Performance metrics
+   • Security best practices
+   • Maintenance tasks
+   • Support resources
+   
+   Best for: Understanding workflows, detailed troubleshooting
+
+
+4. example-secrets.txt
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   Contents:
+   • All required secrets with descriptions
+   • How to obtain each secret
+   • Secret generation commands
+   • Security checklist
+   • Testing procedures
+   • Troubleshooting tips
+   
+   Best for: Setup reference, template
+
+
+5. sync-merchants.ts
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   Features:
+   • Command-line argument parsing
+   • Environment validation
+   • Multi-merchant support
+   • Detailed logging
+   • Error handling
+   • Exit codes
+   • Sync summary
+   
+   Usage:
+   bun run src/scripts/sync-merchants.ts [--merchant <name>] [--force]
+
+
+SECRETS CONFIGURATION
+=====================
+
+Required: 11 secrets
+  6 - Database & API
+  5 - Deployment
+
+Optional: 8 secrets
+  4 - Merchant APIs
+  4 - Notifications
+
+Total: 19 secrets
+
+
+VARIABLES CONFIGURATION
+=======================
+
+Required: 5 variables
+  • FRONTEND_URL
+  • FRONTEND_API_URL
+  • BACKEND_URL
+  • SUPABASE_URL
+  • SUPABASE_ANON_KEY
+
+
+SETUP PROCESS
+=============
+
+Step 1: Generate Secrets
+  openssl rand -base64 32  # JWT_SECRET
+  openssl rand -base64 32  # SYNC_API_KEY
+
+Step 2: Get Platform Credentials
+  • Supabase: Dashboard → Settings → API
+  • Railway: Dashboard → Account → API Tokens
+  • Vercel: Dashboard → Settings → Tokens
+
+Step 3: Add to GitHub
+  Settings → Secrets and variables → Actions
+  → Add 19 secrets + 5 variables
+
+Step 4: Test
+  Create PR → Verify workflows run
+
+Step 5: Deploy
+  Merge to main → Monitor deployment
+
+
+WORKFLOW EXECUTION TIMES
+========================
+
+CI/CD Pipeline:     ~15-20 minutes
+  Frontend:         3-5 minutes
+  Backend:          2-4 minutes
+  Deployments:      3-5 minutes each
+  Smoke Tests:      30 seconds
+
+Merchant Sync:      ~20-40 minutes
+  Per Merchant:     5-10 minutes
+  Health Check:     30 seconds
+
+
+SECURITY FEATURES
+=================
+
+✓ Secrets in GitHub (not code)
+✓ Service role keys only on backend
+✓ Sensitive data filtered from Sentry
+✓ .env files in .gitignore
+✓ Branch protection recommended
+✓ PR reviews recommended
+✓ Secret rotation (90 days)
+
+
+MONITORING CHECKLIST
+====================
+
+Daily:
+  □ Check workflow runs
+  □ Review failed deployments
+  □ Check Sentry errors
+
+Weekly:
+  □ Review sync reports
+  □ Check artifact storage
+  □ Update dependencies
+
+Monthly:
+  □ Update documentation
+  □ Optimize workflows
+  □ Clean old runs
+
+Quarterly:
+  □ Rotate all secrets
+  □ Update action versions
+  □ Review workflows
+  □ Update runtime versions
+
+
+SUPPORT RESOURCES
+=================
+
+Internal:
+  • GitHub Actions logs
+  • Sentry error tracking
+  • Platform dashboards
+
+External:
+  • GitHub Actions Docs
+  • Railway Docs
+  • Vercel Docs
+  • Supabase Docs
+
+
+FILE LOCATIONS
+==============
+
+Workflows:
+  ./.github/workflows/ci-cd.yml
+  ./.github/workflows/merchant-sync.yml
+  ./.github/workflows/README.md
+  ./.github/workflows/example-secrets.txt
+
+Scripts:
+  ./buildstock-pro/backend/src/scripts/sync-merchants.ts
+
+Documentation:
+  ./CI-CD-SETUP.md
+  ./CI-CD-QUICK-REF.md
+  ./CI-CD-IMPLEMENTATION-SUMMARY.md
+  ./CI-CD-FILE-STRUCTURE.txt (this file)
+
+
+NEXT STEPS
+==========
+
+Immediate:
+  □ Review all created files
+  □ Generate required secrets
+  □ Add secrets to GitHub
+  □ Test on feature branch
+  □ Deploy to production
+
+Short-term:
+  □ Set up monitoring
+  □ Configure staging
+  □ Add more tests
+  □ Set up staging workflows
+
+Long-term:
+  □ Blue-green deployments
+  □ Performance testing
+  □ Automated rollback
+  □ Canary deployments
+
+
+SUCCESS CRITERIA
+================
+
+✓ All workflow files created
+✓ Documentation comprehensive
+✓ Script functional
+✓ Example config provided
+✓ Setup process clear
+✓ Troubleshooting guide available
+✓ Security best practices documented
+✓ Ready for production configuration
+
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STATUS: READY FOR CONFIGURATION
+VERSION: 1.0.0
+DATE: 2026-01-30
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

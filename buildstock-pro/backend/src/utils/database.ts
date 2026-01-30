@@ -18,46 +18,88 @@ if (!supabaseUrl || !supabaseKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseKey);
 
-// For backward compatibility, we'll map direct SQL to Supabase queries
-// This is a simplified version - you may need to expand this for complex queries
+// Main query function with TypeScript overloads for type safety
+export async function query<T = any>(sql: string, params?: any[]): Promise<T[]>;
 export async function query<T = any>(table: string, options?: {
   select?: string;
   filter?: { column: string; operator: string; value: any };
   orderBy?: { column: string; ascending?: boolean };
   limit?: number;
   offset?: number;
-}): Promise<T[]> {
+}): Promise<T[]>;
+export async function query<T = any>(
+  tableOrSql: string,
+  optionsOrParams?: any
+): Promise<T[]> {
   const start = Date.now();
 
+  // Detect if this is a raw SQL query (contains SELECT and parameter placeholders)
+  const isRawSql = tableOrSql.toUpperCase().includes('SELECT') && tableOrSql.includes('$') && Array.isArray(optionsOrParams);
+
+  if (isRawSql) {
+    // This is a raw SQL query - use PostgreSQL connection directly
+    if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('[PASSWORD]')) {
+      throw new Error('DATABASE_URL not configured or contains placeholder');
+    }
+
+    try {
+      const { Pool } = await import('pg');
+      const pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+      });
+
+      try {
+        const result = await pool.query(tableOrSql, optionsOrParams);
+        const duration = Date.now() - start;
+        console.log(`Raw SQL query completed in ${duration}ms, ${result.rows.length} rows`);
+        return result.rows as T[];
+      } finally {
+        await pool.end();
+      }
+    } catch (error) {
+      console.error('Raw SQL query error:', error);
+      throw error;
+    }
+  }
+
+  // Otherwise use Supabase client for table queries
+  const options = optionsOrParams as {
+    select?: string;
+    filter?: { column: string; operator: string; value: any };
+    orderBy?: { column: string; ascending?: boolean };
+    limit?: number;
+    offset?: number;
+  } | undefined;
+
   try {
-    let query = supabase.from(table).select(options?.select || '*');
+    let supabaseQuery = supabase.from(tableOrSql).select(options?.select || '*');
 
     if (options?.filter) {
-      query = query.filter(options.filter.column, options.filter.operator, options.filter.value);
+      supabaseQuery = supabaseQuery.filter(options.filter.column, options.filter.operator, options.filter.value);
     }
 
     if (options?.orderBy) {
-      query = query.order(options.orderBy.column, { ascending: options.orderBy.ascending ?? true });
+      supabaseQuery = supabaseQuery.order(options.orderBy.column, { ascending: options.orderBy.ascending ?? true });
     }
 
     if (options?.limit) {
-      query = query.limit(options.limit);
+      supabaseQuery = supabaseQuery.limit(options.limit);
     }
 
     if (options?.offset) {
-      query = query.range(options.offset, (options.offset + (options?.limit || 10) - 1));
+      supabaseQuery = supabaseQuery.range(options.offset, (options.offset + (options?.limit || 10) - 1));
     }
 
-    const { data, error } = await query;
+    const { data, error } = await supabaseQuery;
 
     const duration = Date.now() - start;
 
     if (error) {
-      console.error(`Query error on ${table}:`, error);
+      console.error(`Query error on ${tableOrSql}:`, error);
       throw error;
     }
 
-    console.log(`Query on ${table} completed in ${duration}ms, ${data?.length || 0} rows`);
+    console.log(`Query on ${tableOrSql} completed in ${duration}ms, ${data?.length || 0} rows`);
     return (data as T[]) || [];
   } catch (error) {
     console.error('Query error:', error);
@@ -120,93 +162,6 @@ export async function queryOne<T = any>(tableOrSql: string, params?: any[] | str
 
     console.log(`Query on ${tableOrSql} completed in ${duration}ms, 1 row`);
     return data as T;
-  } catch (error) {
-    console.error('Query error:', error);
-    throw error;
-  }
-}
-
-// Overload for raw SQL queries
-export async function query<T = any>(sql: string, params?: any[]): Promise<T[]>;
-export async function query<T = any>(table: string, options?: {
-  select?: string;
-  filter?: { column: string; operator: string; value: any };
-  orderBy?: { column: string; ascending?: boolean };
-  limit?: number;
-  offset?: number;
-}): Promise<T[]>;
-export async function query<T = any>(
-  tableOrSql: string,
-  optionsOrParams?: any
-): Promise<T[]> {
-  const start = Date.now();
-
-  // Detect if this is a raw SQL query
-  if (tableOrSql.includes('SELECT') && tableOrSql.includes('$') && Array.isArray(optionsOrParams)) {
-    // This is a raw SQL query
-    if (!process.env.DATABASE_URL || process.env.DATABASE_URL.includes('[PASSWORD]')) {
-      throw new Error('DATABASE_URL not configured or contains placeholder');
-    }
-
-    try {
-      const { Pool } = await import('pg');
-      const pool = new Pool({
-        connectionString: process.env.DATABASE_URL,
-      });
-
-      try {
-        const result = await pool.query(tableOrSql, optionsOrParams);
-        const duration = Date.now() - start;
-        console.log(`Raw SQL query completed in ${duration}ms, ${result.rows.length} rows`);
-        return result.rows as T[];
-      } finally {
-        await pool.end();
-      }
-    } catch (error) {
-      console.error('Raw SQL query error:', error);
-      throw error;
-    }
-  }
-
-  // Otherwise use Supabase client
-  const options = optionsOrParams as {
-    select?: string;
-    filter?: { column: string; operator: string; value: any };
-    orderBy?: { column: string; ascending?: boolean };
-    limit?: number;
-    offset?: number;
-  } | undefined;
-
-  try {
-    let query = supabase.from(tableOrSql).select(options?.select || '*');
-
-    if (options?.filter) {
-      query = query.filter(options.filter.column, options.filter.operator, options.filter.value);
-    }
-
-    if (options?.orderBy) {
-      query = query.order(options.orderBy.column, { ascending: options.orderBy.ascending ?? true });
-    }
-
-    if (options?.limit) {
-      query = query.limit(options.limit);
-    }
-
-    if (options?.offset) {
-      query = query.range(options.offset, (options.offset + (options?.limit || 10) - 1));
-    }
-
-    const { data, error } = await query;
-
-    const duration = Date.now() - start;
-
-    if (error) {
-      console.error(`Query error on ${tableOrSql}:`, error);
-      throw error;
-    }
-
-    console.log(`Query on ${tableOrSql} completed in ${duration}ms, ${data?.length || 0} rows`);
-    return (data as T[]) || [];
   } catch (error) {
     console.error('Query error:', error);
     throw error;

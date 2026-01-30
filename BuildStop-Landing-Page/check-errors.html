@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check for Errors</title>
+</head>
+<body>
+    <h1>JavaScript Error Check</h1>
+    <div id="errors"></div>
+    
+    <script>
+        // Error handler
+        window.onerror = function(msg, url, line) {
+            const errorDiv = document.getElementById('errors');
+            errorDiv.innerHTML += '<div style="color: red;">ERROR: ' + msg + ' (Line ' + line + ')</div>';
+            console.error('Error caught:', msg);
+            return true;
+        };
+        
+        // Function existence check
+        setTimeout(() => {
+            const errors = [];
+            const functions = ['handleHeroSearch', 'handleReserve', 'handleContactSubmit'];
+            
+            functions.forEach(func => {
+                if (typeof window[func] !== 'function') {
+                    errors.push('Function ' + func + ' not found');
+                } else {
+                    console.log('✓ Function ' + func + ' exists');
+                }
+            });
+            
+            // Button attachment check
+            const searchBtn = document.querySelector('button[onclick="handleHeroSearch()"]');
+            const reserveBtn = document.querySelector('button[onclick="handleReserve()"]');
+            
+            if (!searchBtn) errors.push('Search button not found');
+            if (!reserveBtn) errors.push('Reserve button not found');
+            
+            const errorDiv = document.getElementById('errors');
+            if (errors.length > 0) {
+                errors.forEach(err => errorDiv.innerHTML += '<div style="color: red;">' + err + '</div>');
+            } else {
+                errorDiv.innerHTML = '<div style="color: green;">No errors found!</div>';
+            }
+        }, 1000);
+    </script>
+</body>
+</html>

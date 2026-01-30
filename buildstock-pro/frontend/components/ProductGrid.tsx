@@ -15,6 +15,7 @@ interface ProductGridProps {
   filters?: SearchFilters;
   initialProducts?: Product[];
   className?: string;
+  onFiltersChange?: (filters: SearchFilters) => void;
 }
 
 type ViewMode = 'grid' | 'list';
@@ -29,7 +30,7 @@ const sortOptions: { value: SortOption; label: string }[] = [
   { value: 'carbon', label: 'Carbon Footprint' },
 ];
 
-export function ProductGrid({ filters = {}, initialProducts, className }: ProductGridProps) {
+export function ProductGrid({ filters = {}, initialProducts, className, onFiltersChange }: ProductGridProps) {
   const [products, setProducts] = useState<Product[]>(initialProducts || mockProducts);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,11 +46,13 @@ export function ProductGrid({ filters = {}, initialProducts, className }: Produc
   // Apply filters and sorting using API
   useEffect(() => {
     const fetchProducts = async () => {
+      console.log('ProductGrid: Fetching products with filters:', filters, 'sortBy:', sortBy);
       setIsLoading(true);
       setError(null);
 
       try {
         const results = await api.searchProducts({ ...filters, sortBy });
+        console.log('ProductGrid: Got results:', results.products.length, 'products');
         setFilteredProducts(results.products);
         setTotalCount(results.total);
         setHasMore(results.products.length < results.total);
@@ -139,7 +142,16 @@ export function ProductGrid({ filters = {}, initialProducts, className }: Produc
   }
 
   if (filteredProducts.length === 0 && !isLoading) {
-    return <EmptyState filters={filters} className={className} />;
+    return (
+      <EmptyState
+        filters={filters}
+        className={className}
+        onCategoryClick={(category) => {
+          console.log('EmptyState: Category clicked:', category);
+          onFiltersChange?.({ ...filters, category: [category] });
+        }}
+      />
+    );
   }
 
   return (

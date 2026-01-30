@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Load Order</title>
+</head>
+<body>
+    <h1>Load Order Verification</h1>
+    
+    <div id="heroSearch" class="hero-search">
+        <input type="text" id="heroSearchInput" placeholder="Search for materials" />
+        <button onclick="handleHeroSearch()" class="btn btn-primary btn-search">Search</button>
+    </div>
+    
+    <button onclick="handleReserve()">Reserve for Pickup</button>
+    
+    <div id="results"></div>
+    
+    <script>
+        // Check everything is loaded
+        function checkLoadState() {
+            const checks = {
+                'heroSearchInput': document.getElementById('heroSearchInput'),
+                'searchBtn': document.querySelector('button[onclick="handleHeroSearch()"]'),
+                'reserveBtn': document.querySelector('button[onclick="handleReserve()"]'),
+                'handleHeroSearch': typeof handleHeroSearch,
+                'handleReserve': typeof handleReserve
+            };
+            
+            let html = '<h2>Load Status:</h2>';
+            for (const [key, value] of Object.entries(checks)) {
+                const status = value ? '✓ EXISTS' : '✗ MISSING';
+                const color = value ? 'green' : 'red';
+                html += `<div style="color: ${color};">${key}: ${status}</div>`;
+            }
+            
+            document.getElementById('results').innerHTML = html;
+        }
+        
+        // Check immediately
+        checkLoadState();
+        
+        // Check after script loads
+        setTimeout(checkLoadState, 100);
+        setTimeout(checkLoadState, 500);
+        setTimeout(checkLoadState, 1000);
+    </script>
+    
+    <script src="/script.js"></script>
+</body>
+</html>

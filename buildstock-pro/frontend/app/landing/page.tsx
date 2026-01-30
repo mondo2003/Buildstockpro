@@ -5,9 +5,13 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
+import { toast } from 'sonner';
+import { useCart } from '@/context/CartContext';
+import { mockProducts } from '@/lib/mockData';
 
 export default function LandingPage() {
   const router = useRouter();
+  const { addItem } = useCart();
   const [heroSearchInput, setHeroSearchInput] = useState('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isHeaderScrolled, setIsHeaderScrolled] = useState(false);
@@ -83,7 +87,32 @@ export default function LandingPage() {
 
   // Reserve button handler
   const handleReserve = () => {
-    router.push('/search');
+    try {
+      // Add the demo product (Recycled Insulation Roll) to cart
+      const demoProduct = mockProducts[0]; // First product is the insulation demo
+      const supplierId = demoProduct.suppliers[0]?.id; // Use first supplier
+
+      if (demoProduct && supplierId) {
+        addItem(demoProduct, supplierId, 1);
+
+        // Show success toast with option to view more products
+        toast.success('Added to cart', {
+          description: `${demoProduct.name} has been added to your cart`,
+          action: {
+            label: 'Browse More Products',
+            onClick: () => router.push('/search'),
+          },
+          duration: 5000,
+        });
+      } else {
+        // Fallback to just navigating to search if product not found
+        router.push('/search');
+      }
+    } catch (error) {
+      console.error('Error reserving product:', error);
+      // Fallback: navigate to search page
+      router.push('/search');
+    }
   };
 
   // Contact form handler
@@ -117,7 +146,7 @@ export default function LandingPage() {
       {/* Header */}
       <header className={`header ${isHeaderScrolled ? 'scrolled' : ''}`}>
         <div className="container header-container">
-          <a href="/" className="logo">
+          <a href="/search" className="logo">
             BuildStop <span className="highlight">Pro</span>
           </a>
           <nav className="nav">
@@ -133,7 +162,7 @@ export default function LandingPage() {
               </li>
               <li>
                 <Button asChild variant="secondary" className="btn btn-secondary">
-                  <a href="/">Get Started</a>
+                  <a href="/search">Get Started</a>
                 </Button>
               </li>
             </ul>
@@ -182,7 +211,7 @@ export default function LandingPage() {
                   <a href="/search">Find Materials Nearby</a>
                 </Button>
                 <Button asChild variant="outline" className="btn btn-outline">
-                  <a href="/">Browse All Materials</a>
+                  <a href="/search">Browse All Materials</a>
                 </Button>
               </div>
             </div>
@@ -286,7 +315,7 @@ export default function LandingPage() {
             <h2>Ready to Optimize Your Site?</h2>
             <p>Join thousands of contractors building smarter with BuildStop Pro.</p>
             <Button asChild size="lg" className="btn btn-primary btn-large">
-              <a href="/">Get Started Free</a>
+              <a href="/search">Get Started Free</a>
             </Button>
           </div>
         </section>
@@ -399,7 +428,7 @@ export default function LandingPage() {
       <footer className="footer">
         <div className="container footer-content">
           <div className="footer-brand">
-            <a href="/" className="logo">
+            <a href="/search" className="logo">
               BuildStop <span className="highlight">Pro</span>
             </a>
             <p>&copy; 2024 BuildStop Pro. All rights reserved.</p>

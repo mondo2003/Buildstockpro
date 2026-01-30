@@ -1,15 +1,26 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, Suspense, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { SearchBar } from '@/components/SearchBar';
 import { FilterPanel } from '@/components/FilterPanel';
 import { ProductGrid } from '@/components/ProductGrid';
 import { SearchFilters } from '@/lib/types';
 
 function SearchPageContent() {
-  const [filters, setFilters] = useState<SearchFilters>({});
+  const searchParams = useSearchParams();
+  const queryParam = searchParams.get('q') || '';
+  const [filters, setFilters] = useState<SearchFilters>({ query: queryParam, sortBy: 'relevance' });
+
+  // Update filters when URL query parameter changes
+  useEffect(() => {
+    if (queryParam) {
+      setFilters((prev) => ({ ...prev, query: queryParam }));
+    }
+  }, [queryParam]);
 
   const handleFiltersChange = (newFilters: SearchFilters) => {
+    console.log('SearchPage: handleFiltersChange called with:', newFilters);
     setFilters(newFilters);
   };
 
@@ -27,7 +38,7 @@ function SearchPageContent() {
             </p>
           </div>
           <div className="max-w-2xl mx-auto">
-            <SearchBar />
+            <SearchBar defaultValue={queryParam} />
           </div>
         </div>
       </div>

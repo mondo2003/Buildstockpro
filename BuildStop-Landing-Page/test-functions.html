@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Functions</title>
+    <style>
+        body { padding: 20px; font-family: Arial; }
+        .hero-search { margin: 20px 0; }
+        input { padding: 8px; margin-right: 10px; }
+        button { padding: 8px 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Test BuildStop Functions</h1>
+    
+    <div class="hero-search">
+        <input type="text" id="heroSearchInput" placeholder="Search for materials" value="test insulation" />
+        <button onclick="handleHeroSearch()">Search</button>
+    </div>
+    
+    <button onclick="handleReserve()">Reserve for Pickup</button>
+    
+    <script>
+        // Copy the functions from script.js
+        function handleReserve() {
+            console.log('handleReserve called');
+            // Redirect to the main app's search page
+            window.location.href = '/search';
+        }
+
+        function handleHeroSearch() {
+            console.log('handleHeroSearch called');
+            const searchInput = document.getElementById('heroSearchInput');
+            const query = searchInput.value.trim();
+
+            if (query) {
+                console.log('Searching for:', query);
+                // Redirect to the main app's search page with the query
+                window.location.href = "/search?q=" + encodeURIComponent(query);
+            } else {
+                console.log('No query, going to search page');
+                window.location.href = '/search';
+            }
+        }
+
+        function handleContactSubmit(event) {
+            console.log('handleContactSubmit called');
+            event.preventDefault();
+            alert('Contact form submitted - this would normally open email client');
+        }
+    </script>
+    
+    <div id="output" style="margin-top: 20px; padding: 10px; background: #f0f0f0;">
+        Check console for function calls
+    </div>
+</body>
+</html>

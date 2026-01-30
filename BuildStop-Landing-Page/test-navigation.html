@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Navigation</title>
+    <script>
+        function testNavigate() {
+            console.log('Testing navigation...');
+            try {
+                window.location.href = '/search';
+                console.log('Navigation initiated');
+            } catch (e) {
+                console.error('Navigation error:', e);
+            }
+        }
+        
+        window.onload = function() {
+            console.log('Page loaded');
+            setTimeout(testNavigate, 1000);
+        };
+    </script>
+</head>
+<body>
+    <button onclick="testNavigate()">Test Navigation</button>
+</body>
+</html>

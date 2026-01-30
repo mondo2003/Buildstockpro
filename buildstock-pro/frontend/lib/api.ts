@@ -68,7 +68,10 @@ class ApiClient {
 
     // Map frontend filters to backend query params
     if (filters.query) params.append('search', filters.query);
-    if (filters.category?.length) params.append('category', filters.category[0]); // Backend expects single category
+    if (filters.category?.length) {
+      console.log('API: Filtering by category:', filters.category);
+      params.append('category', filters.category[0]); // Backend expects single category
+    }
     if (filters.sortBy) {
       // Map frontend sort values to backend
       const sortMap: Record<string, string> = {
@@ -85,11 +88,14 @@ class ApiClient {
     params.append('limit', '20');
 
     try {
+      console.log('API: Fetching from backend with params:', params.toString());
       const result = await this.request<any[]>(`/api/products?${params.toString()}`);
 
       // Transform backend response to frontend format
       const products = result.map(this.transformBackendProduct);
       const total = products.length;
+
+      console.log('API: Backend returned', products.length, 'products');
 
       return {
         products,
@@ -103,7 +109,7 @@ class ApiClient {
         },
       };
     } catch (error) {
-      console.warn('Failed to fetch products from API, falling back to mock data', error);
+      console.warn('API: Backend request failed, falling back to mock data', error);
       // Fallback to mock data
       return getFilteredProducts(filters);
     }
