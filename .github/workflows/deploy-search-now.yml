@@ -1,0 +1,20 @@
+name: Deploy Search Function Now
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Supabase CLI
+        run: npm install -g supabase
+
+      - name: Deploy Search Function
+        run: |
+          supabase functions deploy search --project-ref xrhlumtimbmglzrfrnnk --no-verify-jwt
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
