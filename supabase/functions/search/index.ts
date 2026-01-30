@@ -1,30 +1,19 @@
 // BuildStock Pro - Search Edge Function
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.7";
+import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
 
-Deno.serve(async (req: Request) => {
-  // Handle CORS
-  if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-      },
-    });
-  }
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
+serve(async (req) => {
   try {
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
-
     const url = new URL(req.url);
     const query = url.searchParams.get('query') || '';
     const category = url.searchParams.get('category');
     const limit = Math.min(parseInt(url.searchParams.get('limit') || '50'), 100);
 
-    console.log('Search params:', { query, category, limit });
+    console.log('Search called with:', { query, category, limit });
 
     // Build search query
     let dbQuery = supabase
@@ -46,7 +35,7 @@ Deno.serve(async (req: Request) => {
     const { data: products, error } = await dbQuery;
 
     if (error) {
-      console.error('Search query error:', error);
+      console.error('Database error:', error);
       throw error;
     }
 
@@ -57,17 +46,19 @@ Deno.serve(async (req: Request) => {
       count: products?.length || 0,
       query: { query, category, limit }
     }), {
+      status: 200,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type'
       },
     });
 
   } catch (error) {
-    console.error('Search function error:', error);
+    console.error('Search error:', error);
     return new Response(JSON.stringify({
-      error: error.message || 'Internal server error',
-      details: error?.toString?.() || String(error)
+      error: error.message || 'Unknown error',
+      details: error
     }), {
       status: 500,
       headers: {
