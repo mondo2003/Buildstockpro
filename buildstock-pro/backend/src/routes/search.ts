@@ -1,5 +1,5 @@
 import { Elysia, t } from 'elysia';
-import { query } from '../utils/database.js';
+import { rawQuery, supabase } from '../utils/database.js';
 
 export const searchRoutes = new Elysia({ prefix: '/api/v1/search' })
   .get('/', async ({ query }) => {
@@ -100,7 +100,7 @@ export const searchRoutes = new Elysia({ prefix: '/api/v1/search' })
       dbQuery += ` LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
       params.push(parseInt(limit), offset);
 
-      const products = await query(dbQuery, params);
+      const products = await rawQuery(dbQuery, params);
 
       // Get total count
       let countQuery = `SELECT COUNT(DISTINCT p.id) as count FROM products p LEFT JOIN listings l ON l.product_id = p.id WHERE 1=1`;
@@ -119,7 +119,7 @@ export const searchRoutes = new Elysia({ prefix: '/api/v1/search' })
         countParamIndex++;
       }
 
-      const countResult = await query(countQuery, countParams);
+      const countResult = await rawQuery(countQuery, countParams);
       const total = parseInt(countResult[0]?.count || '0');
 
       return {

@@ -89,7 +89,7 @@ class ApiClient {
 
     try {
       console.log('API: Fetching from backend with params:', params.toString());
-      const result = await this.request<any[]>(`/api/products?${params.toString()}`);
+      const result = await this.request<any[]>(`/api/v1/search?${params.toString()}`);
 
       // Transform backend response to frontend format
       const products = result.map(this.transformBackendProduct);
