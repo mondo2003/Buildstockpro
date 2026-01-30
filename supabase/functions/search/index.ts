@@ -1,11 +1,8 @@
 // BuildStock Pro - Search Edge Function
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.7";
 
-const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-
-serve(async (req) => {
+Deno.serve(async (req: Request) => {
   // Handle CORS
   if (req.method === 'OPTIONS') {
     return new Response(null, {
@@ -18,8 +15,10 @@ serve(async (req) => {
   }
 
   try {
-    console.log('Search function called');
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
+
     const url = new URL(req.url);
     const query = url.searchParams.get('query') || '';
     const category = url.searchParams.get('category');
@@ -27,7 +26,7 @@ serve(async (req) => {
 
     console.log('Search params:', { query, category, limit });
 
-    // Build search query - start with basic select
+    // Build search query
     let dbQuery = supabase
       .from('products')
       .select('*')
@@ -36,12 +35,10 @@ serve(async (req) => {
     // Search by name, description, or category
     if (query && query.trim()) {
       const searchTerm = query.trim();
-      console.log('Searching for:', searchTerm);
       dbQuery = dbQuery.or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%,category.ilike.%${searchTerm}%`);
     }
 
     if (category) {
-      console.log('Filtering by category:', category);
       dbQuery = dbQuery.eq('category', category);
     }
 
@@ -55,7 +52,6 @@ serve(async (req) => {
 
     console.log('Found products:', products?.length || 0);
 
-    // Return results
     return new Response(JSON.stringify({
       results: products || [],
       count: products?.length || 0,
@@ -69,10 +65,9 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Search function error:', error);
-    console.error('Error details:', JSON.stringify(error, null, 2));
     return new Response(JSON.stringify({
       error: error.message || 'Internal server error',
-      details: error
+      details: error?.toString?.() || String(error)
     }), {
       status: 500,
       headers: {
