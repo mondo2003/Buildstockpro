@@ -32,7 +32,7 @@ const sortOptions: { value: SortOption; label: string }[] = [
 
 export function ProductGrid({ filters = {}, initialProducts, className, onFiltersChange }: ProductGridProps) {
   const [products, setProducts] = useState<Product[]>(initialProducts || mockProducts);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>(initialProducts || mockProducts);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
@@ -58,8 +58,14 @@ export function ProductGrid({ filters = {}, initialProducts, className, onFilter
         setHasMore(results.products.length < results.total);
         setPage(1);
       } catch (err) {
-        setError('Failed to load products. Please try again.');
-        console.error('Error fetching products:', err);
+        // API failed - use mock data directly as fallback
+        console.warn('ProductGrid: API failed, using mock data directly:', err);
+        const { getFilteredProducts } = await import('@/lib/mockData');
+        const mockResults = getFilteredProducts({ ...filters, sortBy });
+        setFilteredProducts(mockResults.products);
+        setTotalCount(mockResults.total);
+        setHasMore(false);
+        setPage(1);
       } finally {
         setIsLoading(false);
       }
