@@ -45,9 +45,10 @@ console.log('\n');
 // Test 3: Try to scrape a category (optional, may fail if structure changes)
 console.log('Test 3: Attempting category scrape...');
 console.log('----------------------------------------');
-// Note: You may need to adjust the category path based on Screwfix's actual URL structure
-// Common categories: cat/power-tools-cat830092, cat/hand-tools-cat830093, etc.
-const category = 'cat/power-tools-cat830092';
+// Note: Screwfix updated their URL structure from /cat/ to /c/
+// New format: https://www.screwfix.com/c/tools/cat830034
+// Pass the full path with leading /c/
+const category = '/c/tools/cat830034';
 const categoryResults = await scrapeCategory(category, 5);
 
 console.log(`Category Results for "${category}":`);

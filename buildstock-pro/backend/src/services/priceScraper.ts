@@ -6,6 +6,7 @@
 import { supabase } from '../utils/database';
 import type { ScrapedProduct, ScrapingResult } from '../scrapers/base';
 import { mockScraper } from '../scrapers/mock-scraper';
+import { savePricesToDatabase, getLatestPrices, getPricesByRetailer, getPricesBatch, getPriceStatistics } from './priceDatabase';
 
 export interface PriceData extends ScrapedProduct {
   id?: string;
@@ -166,58 +167,8 @@ export class PriceScrapingService {
    * Save multiple prices to database
    */
   async savePrices(prices: ScrapedProduct[]): Promise<PriceData[]> {
-    console.log(`[PriceScraper] Saving ${prices.length} prices to database...`);
-
-    const saved: PriceData[] = [];
-
-    for (const price of prices) {
-      try {
-        // Check if product already exists
-        const existing = await this.getExistingProduct(price.retailer, price.retailer_product_id);
-
-        if (existing) {
-          // Update existing product
-          const { data, error } = await supabase
-            .from(this.tableName)
-            .update({
-              price: price.price,
-              in_stock: price.in_stock,
-              stock_text: price.stock_text,
-              scraped_at: new Date().toISOString(),
-            })
-            .eq('id', existing.id)
-            .select()
-            .single();
-
-          if (!error && data) {
-            saved.push(data as PriceData);
-          }
-        } else {
-          // Insert new product
-          const { data, error } = await supabase
-            .from(this.tableName)
-            .insert({
-              ...price,
-              scraped_at: new Date().toISOString(),
-            })
-            .select()
-            .single();
-
-          if (!error && data) {
-            saved.push(data as PriceData);
-          }
-        }
-
-        // Rate limiting
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-      } catch (error) {
-        console.error(`[PriceScraper] Error saving price for ${price.product_name}:`, error);
-      }
-    }
-
-    console.log(`[PriceScraper] Successfully saved ${saved.length}/${prices.length} prices`);
-    return saved;
+    // Use direct database access for better performance and reliability
+    return await savePricesToDatabase(prices);
   }
 
   /**
@@ -379,46 +330,8 @@ export class PriceScrapingService {
     categories: string[];
     lastUpdated: string | null;
   }> {
-    try {
-      // Get total count
-      const { count } = await supabase
-        .from(this.tableName)
-        .select('*', { count: 'exact', head: true });
-
-      // Get unique retailers
-      const { data: retailers } = await supabase
-        .from(this.tableName)
-        .select('retailer');
-
-      // Get unique categories
-      const { data: categories } = await supabase
-        .from(this.tableName)
-        .select('category');
-
-      // Get last update time
-      const { data: lastUpdate } = await supabase
-        .from(this.tableName)
-        .select('scraped_at')
-        .order('scraped_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      return {
-        totalProducts: count || 0,
-        retailers: [...new Set(retailers?.map(r => r.retailer) || [])],
-        categories: [...new Set(categories?.map(c => c.category).filter(Boolean) || [])],
-        lastUpdated: lastUpdate?.scraped_at || null,
-      };
-
-    } catch (error) {
-      console.error('[PriceScraper] Error getting statistics:', error);
-      return {
-        totalProducts: 0,
-        retailers: [],
-        categories: [],
-        lastUpdated: null,
-      };
-    }
+    // Use direct database access for better performance
+    return await getPriceStatistics();
   }
 
   /**

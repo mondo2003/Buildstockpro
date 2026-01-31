@@ -145,8 +145,18 @@ export async function scrapeCategory(category: string, maxProducts: number = 20)
   try {
     console.log(`[Screwfix] Starting category scrape: ${category} (max ${maxProducts} products)`);
 
-    // Build category URL
-    const categoryUrl = `${SCREWFIX_BASE_URL}/${category}`; // e.g., '/cat/power-tools-cat830092'
+    // Build category URL - handle both old and new formats
+    let categoryUrl: string;
+    if (category.startsWith('/c/') || category.startsWith('/cat/')) {
+      // Already has the prefix, just add base URL
+      categoryUrl = category.startsWith('http') ? category : `${SCREWFIX_BASE_URL}${category}`;
+    } else if (category.startsWith('c/')) {
+      // Has c/ but no leading slash
+      categoryUrl = category.startsWith('http') ? category : `${SCREWFIX_BASE_URL}/${category}`;
+    } else {
+      // Just the category part, add /c/ prefix
+      categoryUrl = `${SCREWFIX_BASE_URL}/c/${category}`;
+    }
 
     console.log(`[Screwfix] Fetching category page: ${categoryUrl}`);
 
@@ -164,14 +174,13 @@ export async function scrapeCategory(category: string, maxProducts: number = 20)
     // Find product links on the category page
     const productLinks: string[] = [];
 
-    // Try multiple selectors for product links
+    // Try multiple selectors for product links (updated for new Screwfix structure)
     const selectors = [
-      'a.product-tile__link',
-      'a.product-link',
-      '.product-item a',
-      '.product-list a',
-      'a[href*="/p/"]',
+      'a[href*="/p/"]',  // Most reliable - any link with /p/ in it
       '.product-tile a',
+      '.product-item a',
+      'a.product-link',
+      '.product-list a',
     ];
 
     for (const selector of selectors) {
