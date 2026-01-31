@@ -67,6 +67,7 @@ export function FilterPanel({ filters, onFiltersChange, className }: FilterPanel
   };
 
   const handleDistanceChange = (value: number[]) => {
+    console.log('🎚️ Distance slider changed to:', value[0], 'miles');
     handleFilterChange('distance', value[0]);
   };
 

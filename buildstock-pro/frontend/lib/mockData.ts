@@ -812,15 +812,29 @@ export function getFilteredProducts(filters: SearchFilters = {}): SearchResults 
 
   // Filter by distance
   if (filters.distance !== undefined) {
+    console.log('🎯 Distance filter active:', filters.distance, 'miles');
+    const beforeLength = filtered.length;
     filtered = filtered.filter((p) => {
       const nearestDistance = Math.min(...p.suppliers.map((s) => s.distance));
-      return nearestDistance <= filters.distance!;
+      const matches = nearestDistance <= filters.distance!;
+      if (!matches && filtered.length < 10) {
+        console.log(`  ❌ "${p.name}" nearest: ${nearestDistance.toFixed(1)}mi`);
+      }
+      return matches;
     });
+    console.log(`✅ Distance filter: ${beforeLength} → ${filtered.length} products`);
   }
 
   // Filter by stock
   if (filters.inStock) {
     filtered = filtered.filter((p) => p.stock.level !== 'out-of-stock');
+  }
+
+  // Filter by same-day collection availability
+  if (filters.sameDayCollection) {
+    filtered = filtered.filter((p) =>
+      p.suppliers.some((s) => s.sameDayCollection === true)
+    );
   }
 
   // Filter by eco rating

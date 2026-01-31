@@ -46,6 +46,9 @@ export function ProductGrid({ filters = {}, initialProducts, className, onFilter
   // Apply filters and sorting using API
   useEffect(() => {
     const fetchProducts = async () => {
+      if (filters.distance !== undefined) {
+        console.log('🔍 ProductGrid: Distance filter detected:', filters.distance, 'miles');
+      }
       console.log('ProductGrid: Fetching products with filters:', filters, 'sortBy:', sortBy);
       setIsLoading(true);
       setError(null);
