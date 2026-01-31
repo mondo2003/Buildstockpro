@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BuildStop Admin - Login</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .logo h1 {
+      color: #333;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .logo p {
+      color: #666;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    .form-group label {
+      display: block;
+      color: #333;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .error {
+      background: #fee;
+      color: #c33;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .info {
+      background: #e3f2fd;
+      color: #1976d2;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="logo">
+      <h1>BuildStop Admin</h1>
+      <p>Dashboard Login</p>
+    </div>
+
+    <div id="error-message" class="error" style="display: none;"></div>
+    <div id="info-message" class="info"></div>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="password">Admin Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter admin password" required autofocus>
+      </div>
+
+      <button type="submit" class="login-btn">
+        <span id="btn-text">Sign In</span>
+        <span id="btn-loading" class="loading">
+          <span class="spinner"></span>
+          Signing in...
+        </span>
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 24px; color: #999; font-size: 12px;">
+      <p>Authorized access only</p>
+      <p>All login attempts are logged</p>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    // Check if already logged in
+    if (localStorage.getItem('admin_session')) {
+      window.location.href = 'index.html';
+    }
+
+    const loginForm = document.getElementById('login-form');
+    const passwordInput = document.getElementById('password');
+    const errorMessage = document.getElementById('error-message');
+    const btnText = document.getElementById('btn-text');
+    const btnLoading = document.getElementById('btn-loading');
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const password = passwordInput.value.trim();
+
+      if (!password) {
+        showError('Please enter a password');
+        return;
+      }
+
+      // Show loading
+      btnText.style.display = 'none';
+      btnLoading.classList.add('active');
+
+      try {
+        const success = await AdminAuth.login(password);
+
+        if (success) {
+          // Redirect to dashboard
+          window.location.href = 'index.html';
+        } else {
+          showError('Invalid password. Please try again.');
+          passwordInput.value = '';
+          passwordInput.focus();
+        }
+      } catch (error) {
+        showError('Login error: ' + error.message);
+      } finally {
+        btnText.style.display = 'inline';
+        btnLoading.classList.remove('active');
+      }
+    });
+
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.style.display = 'block';
+      setTimeout(() => {
+        errorMessage.style.display = 'none';
+      }, 5000);
+    }
+
+    // Show info if using demo mode
+    if (AdminAuth.isDemoMode()) {
+      document.getElementById('info-message').textContent = 'Demo Mode: Any password will work';
+    }
+  </script>
+</body>
+</html>

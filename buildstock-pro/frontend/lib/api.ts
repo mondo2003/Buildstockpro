@@ -92,10 +92,22 @@ class ApiClient {
       const result = await this.request<any[]>(`/api/v1/search?${params.toString()}`);
 
       // Transform backend response to frontend format
-      const products = result.map(this.transformBackendProduct);
+      let products = result.map(this.transformBackendProduct);
       const total = products.length;
 
       console.log('API: Backend returned', products.length, 'products');
+
+      // Fetch live prices for products
+      const productIds = products.map(p => p.id);
+      if (productIds.length > 0) {
+        try {
+          const livePrices = await this.fetchLivePrices(productIds);
+          products = this.mergeLivePrices(products, livePrices);
+          console.log(`✅ Loaded live prices for ${livePrices.length} products`);
+        } catch (err) {
+          console.warn('⚠️ Could not fetch live prices, using mock data:', err);
+        }
+      }
 
       return {
         products,
@@ -189,6 +201,73 @@ class ApiClient {
       createdAt: backendProduct.created_at || new Date().toISOString(),
       updatedAt: backendProduct.updated_at || new Date().toISOString(),
     };
+  }
+
+  // Fetch live prices for multiple products from the price scraping API
+  private async fetchLivePrices(productIds: string[]): Promise<any[]> {
+    try {
+      const idsParam = productIds.join(',');
+      const response = await fetch(`${this.baseUrl}/api/prices/check-batch?ids=${idsParam}`);
+
+      if (!response.ok) {
+        console.warn('Failed to fetch live prices:', response.statusText);
+        return [];
+      }
+
+      const result = await response.json();
+      if (result.success && result.data) {
+        return result.data;
+      }
+
+      return [];
+    } catch (error) {
+      console.error('Error fetching live prices:', error);
+      return [];
+    }
+  }
+
+  // Merge live price data into products
+  private mergeLivePrices(products: Product[], livePrices: any[]): Product[] {
+    // Create a map of product prices for quick lookup
+    const priceMap = new Map<string, any[]>();
+    for (const price of livePrices) {
+      if (!priceMap.has(price.product_id)) {
+        priceMap.set(price.product_id, []);
+      }
+      priceMap.get(price.product_id)!.push(price);
+    }
+
+    return products.map(product => {
+      const productPrices = priceMap.get(product.id);
+
+      if (!productPrices || productPrices.length === 0) {
+        // No live prices available, return product as-is
+        return product;
+      }
+
+      // Update suppliers with live price data
+      const updatedSuppliers = product.suppliers.map(supplier => {
+        const livePrice = productPrices.find((p: any) => p.merchant_id === supplier.id);
+
+        if (livePrice) {
+          return {
+            ...supplier,
+            price: livePrice.price,
+            stock: livePrice.stock_level === 'in_stock' ? supplier.stock :
+                   livePrice.stock_level === 'low_stock' ? Math.floor(supplier.stock / 2) : 0,
+            livePrice: true,
+            lastUpdated: livePrice.scraped_at,
+          };
+        }
+
+        return supplier;
+      });
+
+      return {
+        ...product,
+        suppliers: updatedSuppliers,
+      };
+    });
   }
 
   // Force use of mock data (for testing)

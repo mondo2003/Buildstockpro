@@ -20,6 +20,7 @@ import { adminRoutes } from './routes/adminRoutes';
 import { merchantsRoutes } from './routes/merchants';
 import { sentryTestRoutes } from './routes/sentry-test';
 import { feedbackRoutes } from './routes/feedback';
+import { pricesRoutes } from './routes/prices';
 import { syncService } from './services/sync.service';
 import { jobScheduler } from './jobs/scheduler';
 import { requireApiKey } from './middleware/api-key.middleware';
@@ -147,6 +148,7 @@ const app = new Elysia()
       stats: '/api/v1/user/stats',
       analytics: '/api/analytics/search',
       feedback: '/api/v1/feedback',
+      prices: '/api/prices',
     },
   }))
   // Mount route groups
@@ -166,6 +168,7 @@ const app = new Elysia()
   .use(adminRoutes)
   .use(sentryTestRoutes)
   .use(feedbackRoutes)
+  .use(pricesRoutes)
   .use(merchantsRoutes)
   // Auth routes (placeholder for future use)
   .group('/api/v1/auth', (app) =>

@@ -1,0 +1,231 @@
+name: Price Sync
+
+# Trigger:
+# - Schedule: Every 6 hours (0:00, 6:00, 12:00, 18:00 UTC)
+# - Manual: Can be triggered from GitHub Actions UI
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # Every 6 hours
+  workflow_dispatch:  # Allow manual trigger from GitHub UI
+    inputs:
+      retailer:
+        description: 'Specific retailer to sync (optional, leave empty for all)'
+        required: false
+        default: ''
+      use_mock_data:
+        description: 'Use mock data for testing'
+        required: false
+        type: boolean
+        default: false
+
+env:
+  BUN_VERSION: 'latest'
+  NODE_VERSION: '20'
+
+jobs:
+  sync-prices:
+    name: Sync Product Prices
+    runs-on: ubuntu-latest
+    timeout-minutes: 30  # Kill if it takes longer than 30 minutes
+
+    # Only run on main branch to avoid duplicate runs
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          cd buildstock-pro/backend
+          bun install
+
+      - name: Run price scraper
+        id: scrape
+        run: |
+          cd buildstock-pro/backend
+
+          # Set environment variables
+          export DATABASE_URL="${{ secrets.DATABASE_URL }}"
+          export SUPABASE_URL="${{ secrets.SUPABASE_URL }}"
+          export SUPABASE_SERVICE_ROLE_KEY="${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}"
+
+          # Optional: Use mock data for testing
+          if [ "${{ github.event.inputs.use_mock_data }}" = "true" ]; then
+            export USE_MOCK_DATA=true
+            echo "🧪 Using mock data for testing"
+          fi
+
+          # Run the sync script
+          bun run sync-prices
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          USE_MOCK_DATA: ${{ github.event.inputs.use_mock_data == 'true' && 'true' || 'false' }}
+
+      - name: Log results
+        if: always()
+        run: |
+          echo "========================================="
+          echo "  Price Sync Summary"
+          echo "========================================="
+          echo "Started: ${{ github.event_name == 'schedule' && 'Scheduled' || 'Manual' }}"
+          echo "Completed: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          echo "Status: ${{ steps.scrape.outcome }}"
+          echo ""
+          echo "Next scheduled run: In 6 hours"
+          echo ""
+
+      - name: Notify on success
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const slackWebhook = '${{ secrets.SLACK_WEBHOOK_URL }}';
+            if (slackWebhook) {
+              await fetch(slackWebhook, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  text: '✅ BuildStock Pro Price Sync Completed Successfully',
+                  blocks: [
+                    {
+                      type: 'section',
+                      text: {
+                        type: 'mrkdwn',
+                        text: '*✅ Price Sync Completed*\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref }}\n*Trigger:* ${{ github.event_name }}\n*Time:* ' + new Date().toISOString()
+                      }
+                    }
+                  ]
+                })
+              });
+            }
+
+      - name: Notify on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const slackWebhook = '${{ secrets.SLACK_WEBHOOK_URL }}';
+            if (slackWebhook) {
+              await fetch(slackWebhook, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  text: '❌ BuildStock Pro Price Sync Failed',
+                  blocks: [
+                    {
+                      type: 'section',
+                      text: {
+                        type: 'mrkdwn',
+                        text: '*❌ Price Sync Failed*\n*Repository:* ${{ github.repository }}\n*Branch:* ${{ github.ref }}\n*Workflow:* ${{ github.workflow }}\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Logs>'
+                      }
+                    },
+                    {
+                      type: 'actions',
+                      elements: [
+                        {
+                          type: 'button',
+                          text: {
+                            type: 'plain_text',
+                            text: 'View Workflow Run'
+                          },
+                          url: '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+                        }
+                      ]
+                    }
+                  ]
+                })
+              });
+            }
+
+      - name: Send email notification on failure
+        if: failure() && secrets.NOTIFICATION_EMAIL != ''
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: "❌ BuildStock Pro Price Sync Failed - ${{ github.repository }}"
+          to: ${{ secrets.NOTIFICATION_EMAIL }}
+          from: GitHub Actions
+          body: |
+            The BuildStock Pro price sync has failed.
+
+            Repository: ${{ github.repository }}
+            Branch: ${{ github.ref }}
+            Workflow: ${{ github.workflow }}
+            Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Please check the logs for more details.
+
+  # Optional: Cleanup old price data (runs daily)
+  cleanup-old-data:
+    name: Cleanup Old Price Data
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install psql client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Delete price data older than 30 days
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          # Keep only the last 30 days of price data
+          psql "$DATABASE_URL" -c "
+            DELETE FROM scraped_prices
+            WHERE scraped_at < NOW() - INTERVAL '30 days'
+            AND id NOT IN (
+              SELECT DISTINCT ON (retailer, retailer_product_id)
+                id
+              FROM scraped_prices
+              ORDER BY retailer, retailer_product_id, scraped_at DESC
+            );
+          "
+
+          # Log how many records were deleted
+          psql "$DATABASE_URL" -c "
+            SELECT
+              retailer,
+              COUNT(*) as remaining_records
+            FROM scraped_prices
+            GROUP BY retailer
+            ORDER BY retailer;
+          "
+
+      - name: Vacuum database to reclaim space
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          psql "$DATABASE_URL" -c "VACUUM ANALYZE scraped_prices;"
+
+      - name: Log cleanup summary
+        run: |
+          echo "========================================="
+          echo "  Database Cleanup Complete"
+          echo "========================================="
+          echo "Completed at: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          echo ""
+          echo "- Deleted price data older than 30 days"
+          echo "- Kept latest price for each product"
+          echo "- Vacuumed database to reclaim space"
+          echo ""

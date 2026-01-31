@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { toast } from 'sonner';
 import { formatDistance } from '@/hooks/useGeolocation';
+import { formatDistanceToNow } from 'date-fns';
 
 interface ProductCardProps {
   product: Product;
@@ -208,8 +209,21 @@ export function ProductCard({
 
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-lg font-bold">£{product.price.toFixed(2)}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="text-lg font-bold">£{product.price.toFixed(2)}</p>
+                      {nearestSupplier?.livePrice && (
+                        <Badge variant="secondary" className="gap-1 animate-pulse text-xs">
+                          <span className="w-1.5 h-1.5 bg-green-500 rounded-full" />
+                          Live
+                        </Badge>
+                      )}
+                    </div>
                     <p className="text-xs text-muted-foreground">per {product.unit}</p>
+                    {nearestSupplier?.livePrice && nearestSupplier?.lastUpdated && (
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Updated {formatDistanceToNow(new Date(nearestSupplier.lastUpdated), { addSuffix: true })}
+                      </p>
+                    )}
                   </div>
 
                   <Badge
@@ -395,8 +409,21 @@ export function ProductCard({
         <CardFooter className="pt-3 border-t">
           <div className="flex items-center justify-between w-full gap-2">
             <div>
-              <p className="text-2xl font-bold">£{product.price.toFixed(2)}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-2xl font-bold">£{product.price.toFixed(2)}</p>
+                {nearestSupplier?.livePrice && (
+                  <Badge variant="secondary" className="gap-1 animate-pulse">
+                    <span className="w-2 h-2 bg-green-500 rounded-full" />
+                    Live Price
+                  </Badge>
+                )}
+              </div>
               <p className="text-xs text-muted-foreground">per {product.unit}</p>
+              {nearestSupplier?.livePrice && nearestSupplier?.lastUpdated && (
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Updated {formatDistanceToNow(new Date(nearestSupplier.lastUpdated), { addSuffix: true })}
+                </p>
+              )}
             </div>
 
             <div className="flex gap-2">

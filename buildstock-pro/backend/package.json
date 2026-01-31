@@ -8,17 +8,20 @@
     "start": "bun src/index.ts",
     "test": "bun test",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "sync-prices": "bun src/scripts/sync-prices.ts"
   },
   "dependencies": {
-    "@elysiajs/cors": "^1.1.0",
     "@elysiajs/bearer": "^1.1.0",
+    "@elysiajs/cors": "^1.1.0",
     "@elysiajs/jwt": "^1.1.0",
     "@sentry/bun": "^8.0.0",
     "@supabase/supabase-js": "^2.93.3",
+    "axios": "^1.13.4",
+    "cheerio": "^1.2.0",
     "elysia": "^1.1.0",
-    "pg": "^8.11.3",
-    "node-cron": "^3.0.3"
+    "node-cron": "^3.0.3",
+    "pg": "^8.11.3"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

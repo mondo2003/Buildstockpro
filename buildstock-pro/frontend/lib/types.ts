@@ -42,6 +42,9 @@ export interface Supplier {
   website?: string;
   stock: number;
   sameDayCollection?: boolean;
+  price?: number; // Live price from scraper
+  livePrice?: boolean; // Whether this price is from live scraping
+  lastUpdated?: string; // When the price was last updated
 }
 
 export interface SearchFilters {
