@@ -55,8 +55,21 @@
                     <p class="hero-text">Find the closest in-stock materials, check their carbon footprint, and build
                         with confidence using rated eco-friendly products.</p>
                     <div class="hero-search">
-                        <input type="text" id="heroSearchInput" placeholder="Search for materials (e.g., insulation, lumber, concrete...)" class="hero-search-input" />
+                        <input type="text" id="heroSearchInput" placeholder="Search for materials like: paint, lumber, tools..." class="hero-search-input" />
                         <button onclick="handleHeroSearch()" class="btn btn-primary btn-search">Search</button>
+                    </div>
+
+                    <!-- Search Suggestions -->
+                    <div class="search-suggestions">
+                        <p class="suggestions-label">Popular searches:</p>
+                        <div class="suggestions-chips">
+                            <button class="suggestion-chip" onclick="quickSearch('paint')">paint</button>
+                            <button class="suggestion-chip" onclick="quickSearch('lumber')">lumber</button>
+                            <button class="suggestion-chip" onclick="quickSearch('tools')">tools</button>
+                            <button class="suggestion-chip" onclick="quickSearch('insulation')">insulation</button>
+                            <button class="suggestion-chip" onclick="quickSearch('flooring')">flooring</button>
+                            <button class="suggestion-chip" onclick="quickSearch('electrical')">electrical</button>
+                        </div>
                     </div>
 
                     <!-- Search Results Section -->
@@ -129,17 +142,24 @@
                 </div>
 
                 <!-- Category Filter -->
-                <div class="category-filter">
-                    <button class="category-btn active" data-category="All">All Materials</button>
-                    <button class="category-btn" data-category="Insulation">Insulation</button>
-                    <button class="category-btn" data-category="Lumber">Lumber</button>
-                    <button class="category-btn" data-category="Concrete">Concrete</button>
-                    <button class="category-btn" data-category="Roofing">Roofing</button>
-                    <button class="category-btn" data-category="Metal">Metal</button>
-                    <button class="category-btn" data-category="Flooring">Flooring</button>
-                    <button class="category-btn" data-category="Paint">Paint</button>
-                    <button class="category-btn" data-category="Decking">Decking</button>
-                    <button class="category-btn" data-category="Countertops">Countertops</button>
+                <div class="category-filter-wrapper">
+                    <div class="category-filter-label">
+                        <span class="filter-icon">🔍</span>
+                        <span>Filter by Category:</span>
+                    </div>
+                    <div class="category-filter">
+                        <button class="category-btn active" data-category="All">All</button>
+                        <button class="category-btn" data-category="Tools">Tools</button>
+                        <button class="category-btn" data-category="Lumber">Lumber</button>
+                        <button class="category-btn" data-category="Electrical">Electrical</button>
+                        <button class="category-btn" data-category="Plumbing">Plumbing</button>
+                        <button class="category-btn" data-category="Paint">Paint</button>
+                        <button class="category-btn" data-category="Flooring">Flooring</button>
+                        <button class="category-btn" data-category="Insulation">Insulation</button>
+                        <button class="category-btn" data-category="Roofing">Roofing</button>
+                        <button class="category-btn" data-category="Hardware">Hardware</button>
+                        <button class="category-btn" data-category="Fasteners">Fasteners</button>
+                    </div>
                 </div>
 
                 <!-- Products Grid -->

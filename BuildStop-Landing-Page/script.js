@@ -298,6 +298,15 @@ function searchMockProducts(query) {
     return results.sort((a, b) => a.price - b.price);
 }
 
+// Quick search from suggestion chips
+function quickSearch(term) {
+    const searchInput = document.getElementById('heroSearchInput');
+    if (searchInput) {
+        searchInput.value = term;
+        handleHeroSearch();
+    }
+}
+
 // Hero search handler - uses mock data sorted by price
 function handleHeroSearch() {
     const searchInput = document.getElementById('heroSearchInput');

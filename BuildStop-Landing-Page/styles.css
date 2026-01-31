@@ -468,6 +468,57 @@ img {
     padding: 0.875rem 2rem;
 }
 
+/* Search Suggestions */
+.search-suggestions {
+    margin-top: var(--spacing-sm);
+    max-width: 600px;
+}
+
+.suggestions-label {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-xs);
+    font-weight: 500;
+}
+
+.suggestions-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+}
+
+.suggestion-chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background: var(--color-surface);
+    border: 1.5px solid var(--gray-300);
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-family: var(--font-family);
+}
+
+.suggestion-chip:hover {
+    background: var(--primary-50);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.suggestion-chip:active {
+    transform: translateY(0);
+}
+
+.suggestion-chip:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
 /* Product Demo */
 .product-demo {
     display: flex;
@@ -733,6 +784,110 @@ img {
 .feature-card:hover .feature-link {
     opacity: 1;
     transform: translateX(0);
+}
+
+/* Category Filter Styles */
+.category-filter-wrapper {
+    margin-bottom: var(--spacing-2xl);
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, var(--primary-50) 0%, var(--color-bg-alt) 100%);
+    border-radius: var(--border-radius-lg);
+    border: 2px solid var(--primary-200);
+    box-shadow: var(--shadow-md);
+}
+
+.category-filter-label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.filter-icon {
+    font-size: 1.5rem;
+    animation: bounce-gentle 2s ease-in-out infinite;
+}
+
+@keyframes bounce-gentle {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+.category-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: center;
+    align-items: center;
+}
+
+.category-btn {
+    padding: 0.875rem 1.5rem;
+    border: 2px solid var(--gray-300);
+    border-radius: 50px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+}
+
+.category-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0, 112, 204, 0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.category-btn:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background: var(--primary-50);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    transform: scale(1.05);
+}
+
+.category-btn:hover::before {
+    opacity: 1;
+}
+
+.category-btn.active {
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    border-color: var(--color-primary);
+    color: white;
+    box-shadow: 0 6px 20px 0 rgba(0, 112, 204, 0.4);
+    transform: scale(1.08);
+    font-weight: 700;
+}
+
+.category-btn:active {
+    transform: scale(0.98);
+}
+
+/* Focus styles for accessibility */
+.category-btn:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
 }
 
 /* CTA Section */
@@ -1174,6 +1329,15 @@ button.loading:hover {
 
     .product-card {
         max-width: 100%;
+    }
+
+    .suggestions-chips {
+        gap: 0.5rem;
+    }
+
+    .suggestion-chip {
+        font-size: 0.8125rem;
+        padding: 0.4375rem 0.875rem;
     }
 }
 
