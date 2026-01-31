@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Forms - BuildStop Pro</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        h1 {
+            color: #0070cc;
+        }
+        .test-section {
+            margin: 40px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .form-group {
+            margin: 15px 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        input.error, select.error, textarea.error {
+            border-color: #ef4444;
+            background-color: #fef2f2;
+        }
+        .field-error {
+            color: #ef4444;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        button {
+            background: #0070cc;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        button.loading {
+            opacity: 0.8;
+        }
+        .spinner-small {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin-small 0.8s linear infinite;
+        }
+        @keyframes spin-small {
+            to { transform: rotate(360deg); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+            20%, 40%, 60%, 80% { transform: translateX(4px); }
+        }
+        .form-success-message, .newsletter-success {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: #10b981;
+            color: white;
+            border-radius: 6px;
+            margin: 15px 0;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        .form-success-message.show, .newsletter-success.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .success-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <h1>BuildStop Pro - Form Functionality Test</h1>
+
+    <div class="test-section">
+        <h2>Contact Form Test</h2>
+        <form id="contactForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" placeholder="Your name">
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <select id="subject" name="subject">
+                    <option value="">Select a subject</option>
+                    <option value="general">General Inquiry</option>
+                    <option value="support">Technical Support</option>
+                    <option value="sales">Sales Question</option>
+                    <option value="feedback">Feedback</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="4" placeholder="How can we help you?"></textarea>
+            </div>
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+
+    <div class="test-section">
+        <h2>Newsletter Signup Test</h2>
+        <form id="newsletterForm">
+            <div class="form-group">
+                <label for="newsletter-email">Email Address</label>
+                <input type="email" id="newsletter-email" name="email" placeholder="Enter your email">
+            </div>
+            <button type="submit">Subscribe</button>
+        </form>
+    </div>
+
+    <div id="results" style="margin-top: 20px; padding: 15px; background: #f0f7ff; border-radius: 6px;">
+        <h3>Test Results:</h3>
+        <pre id="test-output">Ready to test...</pre>
+    </div>
+
+    <script>
+        // Test helper functions
+        function log(message) {
+            const output = document.getElementById('test-output');
+            output.textContent += '\n' + message;
+        }
+
+        // Email validation
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Show field error
+        function showFieldError(form, fieldName, message) {
+            const field = form.querySelector(`[name="${fieldName}"]`);
+            if (!field) return;
+
+            const existingError = field.parentElement.querySelector('.field-error');
+            if (existingError) existingError.remove();
+
+            field.classList.add('error');
+
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'field-error';
+            errorDiv.textContent = message;
+            field.parentElement.appendChild(errorDiv);
+
+            field.style.animation = 'shake 0.5s ease';
+            setTimeout(() => {
+                field.style.animation = '';
+            }, 500);
+        }
+
+        // Clear errors
+        function clearFormErrors(form) {
+            form.querySelectorAll('.error').forEach(field => {
+                field.classList.remove('error');
+            });
+            form.querySelectorAll('.field-error').forEach(error => {
+                error.remove();
+            });
+        }
+
+        // Show success
+        function showFormSuccess(form, message) {
+            const container = form.parentElement;
+            const existingSuccess = container.querySelector('.form-success-message');
+            if (existingSuccess) existingSuccess.remove();
+
+            const successDiv = document.createElement('div');
+            successDiv.className = 'form-success-message';
+            successDiv.innerHTML = `
+                <span class="success-icon">✓</span>
+                <span>${message}</span>
+            `;
+            container.insertBefore(successDiv, form);
+
+            setTimeout(() => {
+                successDiv.classList.add('show');
+            }, 10);
+
+            setTimeout(() => {
+                successDiv.classList.remove('show');
+                setTimeout(() => successDiv.remove(), 300);
+            }, 5000);
+        }
+
+        // Contact form handler
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            log('Contact form submitted');
+
+            const form = event.target;
+            const submitButton = form.querySelector('button[type="submit"]');
+            const formData = new FormData(form);
+
+            const name = formData.get('name')?.trim();
+            const email = formData.get('email')?.trim();
+            const subject = formData.get('subject');
+            const message = formData.get('message')?.trim();
+
+            clearFormErrors(form);
+
+            let hasErrors = false;
+
+            if (!name || name.length < 2) {
+                showFieldError(form, 'name', 'Please enter your name (at least 2 characters)');
+                log('❌ Name validation failed');
+                hasErrors = true;
+            } else {
+                log('✓ Name validated: ' + name);
+            }
+
+            if (!email || !isValidEmail(email)) {
+                showFieldError(form, 'email', 'Please enter a valid email address');
+                log('❌ Email validation failed');
+                hasErrors = true;
+            } else {
+                log('✓ Email validated: ' + email);
+            }
+
+            if (!subject) {
+                showFieldError(form, 'subject', 'Please select a subject');
+                log('❌ Subject validation failed');
+                hasErrors = true;
+            } else {
+                log('✓ Subject validated: ' + subject);
+            }
+
+            if (!message || message.length < 10) {
+                showFieldError(form, 'message', 'Please enter a message (at least 10 characters)');
+                log('❌ Message validation failed');
+                hasErrors = true;
+            } else {
+                log('✓ Message validated: ' + message.substring(0, 30) + '...');
+            }
+
+            if (hasErrors) {
+                log('⚠️ Form has validation errors');
+                return;
+            }
+
+            const originalButtonText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<span class="spinner-small"></span> Sending...';
+            submitButton.classList.add('loading');
+            log('⏳ Loading state shown...');
+
+            setTimeout(() => {
+                showFormSuccess(form, 'Thank you! We\'ll contact you soon.');
+                log('✅ Success message shown');
+                form.reset();
+
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
+                submitButton.classList.remove('loading');
+                log('✅ Form reset and button restored');
+            }, 1000);
+        });
+
+        // Newsletter form handler
+        document.getElementById('newsletterForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            log('\nNewsletter form submitted');
+
+            const form = event.target;
+            const submitButton = form.querySelector('button[type="submit"]');
+            const emailInput = form.querySelector('input[type="email"]');
+            const email = emailInput?.value.trim();
+
+            const container = form.parentElement;
+            container.querySelectorAll('.newsletter-error').forEach(error => error.remove());
+            emailInput?.classList.remove('error');
+
+            if (!email || !isValidEmail(email)) {
+                if (emailInput) {
+                    emailInput.classList.add('error');
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'newsletter-error';
+                    errorDiv.textContent = 'Please enter a valid email address';
+                    form.parentElement.appendChild(errorDiv);
+                    emailInput.style.animation = 'shake 0.5s ease';
+                    setTimeout(() => { emailInput.style.animation = ''; }, 500);
+                }
+                log('❌ Newsletter email validation failed');
+                return;
+            }
+
+            log('✓ Newsletter email validated: ' + email);
+
+            const originalButtonText = submitButton.textContent;
+            submitButton.disabled = true;
+            submitButton.textContent = 'Subscribing...';
+            submitButton.classList.add('loading');
+            log('⏳ Newsletter loading state shown...');
+
+            setTimeout(() => {
+                const existingSuccess = container.querySelector('.newsletter-success');
+                if (existingSuccess) existingSuccess.remove();
+
+                const successDiv = document.createElement('div');
+                successDiv.className = 'newsletter-success';
+                successDiv.innerHTML = `
+                    <span class="success-icon">✓</span>
+                    <span>Thanks for subscribing!</span>
+                `;
+                container.appendChild(successDiv);
+
+                setTimeout(() => { successDiv.classList.add('show'); }, 10);
+                log('✅ Newsletter success message shown');
+
+                emailInput.value = '';
+                submitButton.disabled = false;
+                submitButton.textContent = originalButtonText;
+                submitButton.classList.remove('loading');
+                log('✅ Newsletter form reset');
+
+                setTimeout(() => {
+                    successDiv.classList.remove('show');
+                    setTimeout(() => successDiv.remove(), 300);
+                }, 5000);
+            }, 1000);
+        });
+
+        log('Test page loaded. Fill out and submit forms to test functionality.');
+    </script>
+</body>
+</html>

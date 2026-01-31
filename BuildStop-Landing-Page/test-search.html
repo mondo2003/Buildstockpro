@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Search Functionality</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0070cc;
+        }
+        h2 {
+            color: #333;
+            border-bottom: 2px solid #0070cc;
+            padding-bottom: 10px;
+        }
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #0070cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #0050a0;
+        }
+        .test-queries {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .test-query-btn {
+            background: #f0f0f0;
+            color: #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .test-query-btn:hover {
+            background: #e0e0e0;
+        }
+        #results {
+            min-height: 200px;
+        }
+        .result-item {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            background: #fafafa;
+        }
+        .result-item h3 {
+            margin: 0 0 10px 0;
+            color: #0070cc;
+        }
+        .result-item p {
+            margin: 5px 0;
+        }
+        .result-item .price {
+            font-weight: bold;
+            color: #10b981;
+        }
+        .result-item .stock {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .stock.in-stock {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .stock.out-stock {
+            background: #fee;
+            color: #c33;
+        }
+        .pass {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .fail {
+            color: #ef4444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Search Functionality Test</h1>
+
+    <div class="test-section">
+        <h2>Test 1: Manual Search</h2>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Enter search term..." value="insulation">
+            <button onclick="testSearch()">Search</button>
+        </div>
+
+        <div class="test-queries">
+            <span>Quick tests:</span>
+            <button class="test-query-btn" onclick="quickSearch('insulation')">Insulation</button>
+            <button class="test-query-btn" onclick="quickSearch('paint')">Paint</button>
+            <button class="test-query-btn" onclick="quickSearch('timber')">Timber</button>
+            <button class="test-query-btn" onclick="quickSearch('lighting')">Lighting</button>
+            <button class="test-query-btn" onclick="quickSearch('bamboo')">Bamboo</button>
+            <button class="test-query-btn" onclick="quickSearch('xyz123')">No Results</button>
+        </div>
+
+        <div id="results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Automated Tests</h2>
+        <button onclick="runAllTests()">Run All Tests</button>
+        <div id="test-results"></div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Test search function
+        function testSearch() {
+            const query = document.getElementById('searchInput').value;
+            if (!query) {
+                alert('Please enter a search term');
+                return;
+            }
+
+            displayResults(searchMockProducts(query), query);
+        }
+
+        function quickSearch(query) {
+            document.getElementById('searchInput').value = query;
+            testSearch();
+        }
+
+        function displayResults(results, query) {
+            const resultsDiv = document.getElementById('results');
+
+            if (results.length === 0) {
+                resultsDiv.innerHTML = `
+                    <div class="result-item">
+                        <p>No results found for "${query}"</p>
+                        <p class="pass">✓ Correctly handles no results</p>
+                    </div>
+                `;
+                return;
+            }
+
+            resultsDiv.innerHTML = `
+                <p class="pass">✓ Found ${results.length} result(s) for "${query}"</p>
+                ${results.map(product => `
+                    <div class="result-item">
+                        <h3>${product.name}</h3>
+                        <p>${product.description}</p>
+                        <p><span class="price">£${product.price.toFixed(2)}</span> | Category: ${product.category}</p>
+                        <p>Merchant: ${product.merchant}</p>
+                        <span class="stock ${product.stock > 0 ? 'in-stock' : 'out-stock'}">
+                            ${product.stock > 0 ? `● In Stock (${product.stock})` : '● Out of Stock'}
+                        </span>
+                        ${product.eco === 'A' ? ' <span style="background:#10b981;color:white;padding:2px 8px;border-radius:10px;font-size:12px;">🌿 Eco</span>' : ''}
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        function runAllTests() {
+            const tests = [
+                { name: 'Search for "insulation"', query: 'insulation', expectedMin: 1 },
+                { name: 'Search for "paint"', query: 'paint', expectedMin: 1 },
+                { name: 'Search for "timber"', query: 'timber', expectedMin: 1 },
+                { name: 'Search for "lighting"', query: 'lighting', expectedMin: 1 },
+                { name: 'Search for "bamboo"', query: 'bamboo', expectedMin: 1 },
+                { name: 'Case insensitive test', query: 'INSULATION', expectedMin: 1 },
+                { name: 'Partial word match', query: 'insul', expectedMin: 1 },
+                { name: 'No results test', query: 'xyz123abc', expectedMin: 0, expectedMax: 0 },
+                { name: 'Category search', query: 'flooring', expectedMin: 1 },
+                { name: 'Multiple words', query: 'recycled insulation', expectedMin: 1 },
+            ];
+
+            let passed = 0;
+            let failed = 0;
+            let results = '';
+
+            tests.forEach(test => {
+                const results_array = searchMockProducts(test.query);
+                const resultCount = results_array.length;
+
+                const passedTest = resultCount >= (test.expectedMin || 0) &&
+                                  resultCount <= (test.expectedMax || 999);
+
+                if (passedTest) {
+                    passed++;
+                    results += `<p class="pass">✓ PASS: ${test.name} - Found ${resultCount} result(s)</p>`;
+                } else {
+                    failed++;
+                    results += `<p class="fail">✗ FAIL: ${test.name} - Expected ${test.expectedMin || 0}+ results, got ${resultCount}</p>`;
+                }
+            });
+
+            results = `
+                <h3>Test Results: ${passed}/${tests.length} passed</h3>
+                ${results}
+                <p><strong>Total: ${passed} passed, ${failed} failed</strong></p>
+            `;
+
+            document.getElementById('test-results').innerHTML = results;
+        }
+
+        // Trigger Enter key
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                testSearch();
+            }
+        });
+    </script>
+</body>
+</html>

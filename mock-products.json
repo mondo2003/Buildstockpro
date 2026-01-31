@@ -1,0 +1,619 @@
+{
+  "products": [
+    {
+      "id": "BS-001",
+      "name": "DeWalt 20V Max Cordless Drill",
+      "description": "Professional-grade cordless drill with 2-speed transmission, LED light, and ergonomic grip. Perfect for heavy-duty drilling and fastening applications.",
+      "price": 149.99,
+      "category": "Tools",
+      "subcategory": "Power Tools",
+      "image": "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=500&h=500&fit=crop",
+      "stock": 45,
+      "specs": {
+        "voltage": "20V",
+        "speed": "0-600/0-2000 RPM",
+        "chuck_size": "1/2 inch",
+        "weight": "3.4 lbs",
+        "warranty": "3 Years"
+      },
+      "brand": "DeWalt",
+      "rating": 4.8,
+      "reviews": 234
+    },
+    {
+      "id": "BS-002",
+      "name": "2x4 Lumber - 8 ft SPF",
+      "description": "Standard construction-grade spruce-pine-fir lumber. Ideal for framing, construction, and DIY projects. Kiln-dried for stability.",
+      "price": 8.99,
+      "category": "Lumber",
+      "subcategory": "Dimensional Lumber",
+      "image": "https://images.unsplash.com/photo-1541123603104-512919d6a96c?w=500&h=500&fit=crop",
+      "stock": 500,
+      "specs": {
+        "dimensions": "2 inch x 4 inch x 8 ft",
+        "grade": "Standard & Better",
+        "moisture_content": "15-19%",
+        "treatment": "Untreated"
+      },
+      "brand": "BuildStop Basics",
+      "rating": 4.6,
+      "reviews": 89
+    },
+    {
+      "id": "BS-003",
+      "name": "14/2 Romex NM-B Wire - 250 ft",
+      "description": "Non-metallic sheathed electrical wire for residential wiring. Copper conductor with PVC jacket. Flame-retardant and moisture-resistant.",
+      "price": 89.99,
+      "category": "Electrical",
+      "subcategory": "Wire",
+      "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=500&fit=crop",
+      "stock": 75,
+      "specs": {
+        "gauge": "14 AWG",
+        "conductors": "2 + Ground",
+        "voltage_rating": "600V",
+        "temperature_rating": "90°C",
+        "type": "NM-B"
+      },
+      "brand": "Southwire",
+      "rating": 4.7,
+      "reviews": 156
+    },
+    {
+      "id": "BS-004",
+      "name": "1/2 inch PVC Pipe - 10 ft",
+      "description": "Sch 40 PVC pipe for water supply and drainage applications. Chemical-resistant and durable. Easy to install with solvent cement.",
+      "price": 4.49,
+      "category": "Plumbing",
+      "subcategory": "Pipe",
+      "image": "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=500&h=500&fit=crop",
+      "stock": 300,
+      "specs": {
+        "diameter": "1/2 inch",
+        "length": "10 ft",
+        "schedule": "40",
+        "material": "PVC",
+        "pressure_rating": "450 PSI"
+      },
+      "brand": "Charlotte Pipe",
+      "rating": 4.5,
+      "reviews": 78
+    },
+    {
+      "id": "BS-005",
+      "name": "Hex Washer Head Wood Screws #8 x 2 inch - 1 lb Box",
+      "description": "Exterior-grade wood screws with weather-resistant coating. Sharp threads for easy driving. Perfect for outdoor projects and deck construction.",
+      "price": 24.99,
+      "category": "Fasteners",
+      "subcategory": "Screws",
+      "image": "https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=500&h=500&fit=crop",
+      "stock": 150,
+      "specs": {
+        "size": "#8",
+        "length": "2 inch",
+        "drive_type": "Phillips #2",
+        "coating": "Exterior Grade",
+        "quantity": "Approx. 375 screws"
+      },
+      "brand": "GRK Fasteners",
+      "rating": 4.9,
+      "reviews": 312
+    },
+    {
+      "id": "BS-006",
+      "name": "Behr Premium Plus Interior Paint - 1 Gallon",
+      "description": "Low-odor, zero-VOC interior paint with excellent hide and durability. Easy clean-up with soap and water. Mold and mildew resistant.",
+      "price": 38.99,
+      "category": "Paint",
+      "subcategory": "Interior Paint",
+      "image": "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=500&h=500&fit=crop",
+      "stock": 120,
+      "specs": {
+        "size": "1 Gallon",
+        "finish": "Eggshell",
+        "coverage": "250-400 sq ft",
+        "voc": "Zero VOC",
+        "cleanup": "Soap and Water"
+      },
+      "brand": "Behr",
+      "rating": 4.6,
+      "reviews": 445
+    },
+    {
+      "id": "BS-007",
+      "name": "Milwaukee 18V Fuel Circular Saw",
+      "description": "Brushless motor circular saw with adjustable depth and bevel. RedLink Plus intelligence for maximum performance. Compatible with M18 batteries.",
+      "price": 199.99,
+      "category": "Tools",
+      "subcategory": "Power Tools",
+      "image": "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=500&h=500&fit=crop",
+      "stock": 32,
+      "specs": {
+        "blade_size": "7-1/4 inch",
+        "voltage": "18V",
+        "max_cut_depth": "2-9/16 inch at 90°",
+        "bevel_capacity": "0-50°",
+        "no_load_speed": "5,800 RPM"
+      },
+      "brand": "Milwaukee",
+      "rating": 4.9,
+      "reviews": 187
+    },
+    {
+      "id": "BS-008",
+      "name": "4x4 Pressure Treated Post - 8 ft",
+      "description": "Ground contact pressure-treated lumber for fence posts, deck posts, and outdoor structures. Rated for 40+ year ground contact.",
+      "price": 24.99,
+      "category": "Lumber",
+      "subcategory": "Treated Lumber",
+      "image": "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=500&h=500&fit=crop",
+      "stock": 200,
+      "specs": {
+        "dimensions": "4 inch x 4 inch x 8 ft",
+        "treatment": "Micronized Copper Azole",
+        "grade": "Premium",
+        "warranty": "Limited Lifetime"
+      },
+      "brand": "YellaWood",
+      "rating": 4.7,
+      "reviews": 134
+    },
+    {
+      "id": "BS-009",
+      "name": "20 Amp Residential Receptacle - 10 Pack",
+      "description": "Tamper-resistant duplex outlets with LED indicator. meets NEC requirements for child safety. Back and side wire capable.",
+      "price": 29.99,
+      "category": "Electrical",
+      "subcategory": "Outlets & Switches",
+      "image": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=500&h=500&fit=crop",
+      "stock": 85,
+      "specs": {
+        "amperage": "20A",
+        "voltage": "125V",
+        "type": "Duplex",
+        "features": "Tamper Resistant",
+        "wire_capacity": "14-2 AWG"
+      },
+      "brand": "Leviton",
+      "rating": 4.8,
+      "reviews": 278
+    },
+    {
+      "id": "BS-010",
+      "name": "Brass Ball Valve 1/2 inch - Full Port",
+      "description": "Heavy-duty brass ball valve for water, oil, and gas applications. Teflon seats for smooth operation. Lead-free certified for potable water.",
+      "price": 12.99,
+      "category": "Plumbing",
+      "subcategory": "Valves",
+      "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=500&fit=crop",
+      "stock": 180,
+      "specs": {
+        "size": "1/2 inch",
+        "connection": "Female NPT",
+        "material": "Brass",
+        "pressure_rating": "600 WOG",
+        "temperature": "-40°F to 250°F"
+      },
+      "brand": "Apollo Valve",
+      "rating": 4.6,
+      "reviews": 92
+    },
+    {
+      "id": "BS-011",
+      "name": "Grade 5 Hex Bolt - 1/2-13 x 2 inch - 25 Pack",
+      "description": "Zinc-plated steel hex bolts for general purpose applications. Medium strength Grade 5. Unified national coarse thread.",
+      "price": 18.99,
+      "category": "Fasteners",
+      "subcategory": "Bolts",
+      "image": "https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=500&h=500&fit=crop",
+      "stock": 220,
+      "specs": {
+        "size": "1/2-13",
+        "length": "2 inch",
+        "grade": "5",
+        "finish": "Zinc",
+        "quantity": "25 Pack"
+      },
+      "brand": "BuildStop Hardware",
+      "rating": 4.5,
+      "reviews": 67
+    },
+    {
+      "id": "BS-012",
+      "name": "Stanley 16 oz Claw Hammer",
+      "description": "Fiberglass handle hammer with forged steel head. Vibration-dampening grip. Perfect for framing and general carpentry work.",
+      "price": 19.99,
+      "category": "Tools",
+      "subcategory": "Hand Tools",
+      "image": "https://images.unsplash.com/photo-1517649281203-dad836b4add5?w=500&h=500&fit=crop",
+      "stock": 95,
+      "specs": {
+        "weight": "16 oz",
+        "handle": "Fiberglass",
+        "face": "Smooth",
+        "claw": "Curved",
+        "length": "13.5 inch"
+      },
+      "brand": "Stanley",
+      "rating": 4.7,
+      "reviews": 523
+    },
+    {
+      "id": "BS-013",
+      "name": "1/2 inch CDX Plywood - 4x8 Sheet",
+      "description": "Exterior grade plywood sheathing for roofs, walls, and floors. C-grade face, D-grade back. Exposure 1 rated for limited exposure.",
+      "price": 42.99,
+      "category": "Lumber",
+      "subcategory": "Sheet Goods",
+      "image": "https://images.unsplash.com/photo-1541123603104-512919d6a96c?w=500&h=500&fit=crop",
+      "stock": 65,
+      "specs": {
+        "thickness": "1/2 inch",
+        "size": "4 ft x 8 ft",
+        "grade": "CDX",
+        "exposure": "Exposure 1",
+        "cores": "Southern Pine"
+      },
+      "brand": "Georgia-Pacific",
+      "rating": 4.4,
+      "reviews": 156
+    },
+    {
+      "id": "BS-014",
+      "name": "LED Recessed Light 6 inch - 90 CRI 5000K",
+      "description": "Energy-efficient LED downlight with high CRI for accurate color rendering. Dimmable and wet location rated. Easy retrofit installation.",
+      "price": 34.99,
+      "category": "Electrical",
+      "subcategory": "Lighting",
+      "image": "https://images.unsplash.com/photo-1565814329452-e1efa11c5b89?w=500&h=500&fit=crop",
+      "stock": 140,
+      "specs": {
+        "size": "6 inch",
+        "wattage": "15W (100W equiv)",
+        "lumens": "1000",
+        "cri": "90+",
+        "color_temp": "5000K Daylight"
+      },
+      "brand": "EcoSmart",
+      "rating": 4.8,
+      "reviews": 389
+    },
+    {
+      "id": "BS-015",
+      "name": "PEX Tubing 1/2 inch - 100 ft Coil",
+      "description": "Flexible PEX-B tubing for potable water and radiant heating. Freeze-resistant and corrosion-proof. Compatible with crimp and clamp fittings.",
+      "price": 59.99,
+      "category": "Plumbing",
+      "subcategory": "Pipe",
+      "image": "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=500&h=500&fit=crop",
+      "stock": 90,
+      "specs": {
+        "diameter": "1/2 inch",
+        "length": "100 ft",
+        "type": "PEX-B",
+        "temperature": "200°F @ 80 PSI",
+        "standards": "ASTM F876/F877"
+      },
+      "brand": "Uponor",
+      "rating": 4.7,
+      "reviews": 201
+    },
+    {
+      "id": "BS-016",
+      "name": "Galvanized Steel Corner Brace - 2 inch - 50 Pack",
+      "description": "Heavy-duty galvanized steel corner braces for reinforcing right-angle joints. Pre-drilled holes for secure fastening.",
+      "price": 22.99,
+      "category": "Hardware",
+      "subcategory": "Structural Hardware",
+      "image": "https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=500&h=500&fit=crop",
+      "stock": 175,
+      "specs": {
+        "size": "2 inch x 2 inch",
+        "thickness": "18 gauge",
+        "finish": "Galvanized",
+        "holes": "5 per side",
+        "quantity": "50 Pack"
+      },
+      "brand": "Simpson Strong-Tie",
+      "rating": 4.6,
+      "reviews": 118
+    },
+    {
+      "id": "BS-017",
+      "name": "3M Advanced Exterior Paint - 5 Gallon",
+      "description": "Premium acrylic exterior paint with rain-ready technology. Resists fading, peeling, and mildew. Excellent hide and durability.",
+      "price": 189.99,
+      "category": "Paint",
+      "subcategory": "Exterior Paint",
+      "image": "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=500&h=500&fit=crop",
+      "stock": 35,
+      "specs": {
+        "size": "5 Gallon",
+        "finish": "Satin",
+        "coverage": "1500-2000 sq ft",
+        "dry_time": "Touch 1 hour, Recoat 2-4 hours",
+        "warranty": "Lifetime"
+      },
+      "brand": "3M",
+      "rating": 4.8,
+      "reviews": 267
+    },
+    {
+      "id": "BS-018",
+      "name": "Bostitch Framing Nailer - 21 Degree",
+      "description": "Pneumatic framing nailer for 21 degree plastic collated nails. Lightweight magnesium body. Tool-free depth adjustment and jam clearing.",
+      "price": 159.99,
+      "category": "Tools",
+      "subcategory": "Power Tools",
+      "image": "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=500&h=500&fit=crop",
+      "stock": 48,
+      "specs": {
+        "nail_angle": "21 degree",
+        "nail_length": "2-1/2 to 3-1/2 inch",
+        "magazine_capacity": "60 nails",
+        "operating_pressure": "70-120 PSI",
+        "weight": "7.6 lbs"
+      },
+      "brand": "Bostitch",
+      "rating": 4.7,
+      "reviews": 342
+    },
+    {
+      "id": "BS-019",
+      "name": "2x6 Lumber - 10 ft SPF",
+      "description": "Premium-grade spruce-pine-fir lumber for joists, rafters, and beams. Kiln-dried and surfaced on 4 sides (S4S).",
+      "price": 16.99,
+      "category": "Lumber",
+      "subcategory": "Dimensional Lumber",
+      "image": "https://images.unsplash.com/photo-1541123603104-512919d6a96c?w=500&h=500&fit=crop",
+      "stock": 380,
+      "specs": {
+        "dimensions": "2 inch x 6 inch x 10 ft",
+        "grade": "Select Structural",
+        "moisture_content": "15-19%",
+        "surface": "S4S"
+      },
+      "brand": "BuildStop Basics",
+      "rating": 4.5,
+      "reviews": 94
+    },
+    {
+      "id": "BS-020",
+      "name": "1-1/4 inch Drywall Screws - 5 lb Box",
+      "description": "Coarse thread black phosphate drywall screws for wood framing. Bugle head for flush setting. Sharp point for easy penetration.",
+      "price": 34.99,
+      "category": "Fasteners",
+      "subcategory": "Screws",
+      "image": "https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=500&h=500&fit=crop",
+      "stock": 125,
+      "specs": {
+        "length": "1-1/4 inch",
+        "diameter": "#6",
+        "thread": "Coarse",
+        "drive": "Phillips #2",
+        "coating": "Black Phosphate"
+      },
+      "brand": "Grabber",
+      "rating": 4.8,
+      "reviews": 456
+    },
+    {
+      "id": "BS-021",
+      "name": "3/4 inch Copper Type M Pipe - 10 ft",
+      "description": "Type M copper tubing for residential water supply. Professional-grade for hot and cold water lines. Easy to solder.",
+      "price": 28.99,
+      "category": "Plumbing",
+      "subcategory": "Pipe",
+      "image": "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=500&h=500&fit=crop",
+      "stock": 95,
+      "specs": {
+        "diameter": "3/4 inch",
+        "length": "10 ft",
+        "type": "Type M",
+        "wall_thickness": "0.032 inch",
+        "pressure_rating": "475 PSI"
+      },
+      "brand": "Mueller",
+      "rating": 4.6,
+      "reviews": 143
+    },
+    {
+      "id": "BS-022",
+      "name": "Heavy-Duty Door Hinge - 4 inch - 3 Pack",
+      "description": "Solid brass door hinges for residential doors. 5 knuckle construction with removable pin. Ball bearing for smooth operation.",
+      "price": 26.99,
+      "category": "Hardware",
+      "subcategory": "Door Hardware",
+      "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=500&fit=crop",
+      "stock": 160,
+      "specs": {
+        "size": "4 inch x 4 inch",
+        "material": "Solid Brass",
+        "finish": "Polished Brass",
+        "pin": "Removable",
+        "weight_capacity": "Each: 55 lbs"
+      },
+      "brand": "Hager",
+      "rating": 4.7,
+      "reviews": 289
+    },
+    {
+      "id": "BS-023",
+      "name": "Klein Tools Lineman's Pliers",
+      "description": "Professional-grade pliers with induction-hardened cutting knives. High-leverage design for more cutting power. Comfortable grips.",
+      "price": 29.99,
+      "category": "Tools",
+      "subcategory": "Hand Tools",
+      "image": "https://images.unsplash.com/photo-1517649281203-dad836b4add5?w=500&h=500&fit=crop",
+      "stock": 110,
+      "specs": {
+        "length": "9 inch",
+        "jaw": "High-Leverage",
+        "cutting_capacity": "1/0 AWG Cu, 1/0 AWG Al",
+        "handle": "Plastic-Dipped",
+        "special_features": "Hot-riveted joint"
+      },
+      "brand": "Klein Tools",
+      "rating": 4.9,
+      "reviews": 678
+    },
+    {
+      "id": "BS-024",
+      "name": "Oriented Strand Board - 7/16 inch - 4x8",
+      "description": "OSB sheathing for walls, roofs, and subfloors. Structural panel with consistent density. Cost-effective alternative to plywood.",
+      "price": 32.99,
+      "category": "Lumber",
+      "subcategory": "Sheet Goods",
+      "image": "https://images.unsplash.com/photo-1541123603104-512919d6a96c?w=500&h=500&fit=crop",
+      "stock": 80,
+      "specs": {
+        "thickness": "7/16 inch",
+        "size": "4 ft x 8 ft",
+        "grade": "Exterior Bond",
+        "exposure": "Exposure 1",
+        "edges": "Square"
+      },
+      "brand": "Huber",
+      "rating": 4.4,
+      "reviews": 201
+    },
+    {
+      "id": "BS-025",
+      "name": "10/3 SOOW Cord - 25 ft - Yellow",
+      "description": "Heavy-duty portable power cord for industrial use. Oil-resistant jacket and insulation. Flexible in temperatures from -40°F to 194°F.",
+      "price": 45.99,
+      "category": "Electrical",
+      "subcategory": "Wire",
+      "image": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=500&fit=crop",
+      "stock": 70,
+      "specs": {
+        "gauge": "10 AWG",
+        "conductors": "3 + Ground",
+        "amperage": "30A",
+        "voltage": "600V",
+        "jacket": "SOOW Yellow"
+      },
+      "brand": "Southwire",
+      "rating": 4.7,
+      "reviews": 134
+    },
+    {
+      "id": "BS-026",
+      "name": "Galvanized Steel Corner Post - 3 inch x 3 inch",
+      "description": "Structural steel corner post for fence corners and deck supports. Hot-dip galvanized for corrosion resistance. Pre-drilled holes.",
+      "price": 38.99,
+      "category": "Hardware",
+      "subcategory": "Fencing Hardware",
+      "image": "https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=500&h=500&fit=crop",
+      "stock": 55,
+      "specs": {
+        "dimensions": "3 inch x 3 inch x 8 ft",
+        "gauge": "16 gauge",
+        "finish": "Galvanized",
+        "wall_thickness": "0.060 inch",
+        "holes": "Pre-drilled every 6 inch"
+      },
+      "brand": "Steel City",
+      "rating": 4.5,
+      "reviews": 87
+    },
+    {
+      "id": "BS-027",
+      "name": "Primer Sealer - 1 Gallon - Water-Based",
+      "description": "Multi-purpose primer for interior and exterior surfaces. Seals stains and provides excellent adhesion. Low odor and quick drying.",
+      "price": 28.99,
+      "category": "Paint",
+      "subcategory": "Primers",
+      "image": "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=500&h=500&fit=crop",
+      "stock": 100,
+      "specs": {
+        "size": "1 Gallon",
+        "type": "Water-Based",
+        "coverage": "300-400 sq ft",
+        "dry_time": "Touch 30 min, Recoat 1 hour",
+        "sheen": "Flat"
+      },
+      "brand": "KILZ",
+      "rating": 4.6,
+      "reviews": 534
+    },
+    {
+      "id": "BS-028",
+      "name": "Rigid Copper Elbow - 3/4 inch - 90 Degree",
+      "description": "Type L copper 90-degree elbow for water supply lines. Professional-grade for solder connections. Uniform wall thickness.",
+      "price": 8.99,
+      "category": "Plumbing",
+      "subcategory": "Fittings",
+      "image": "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=500&h=500&fit=crop",
+      "stock": 200,
+      "specs": {
+        "size": "3/4 inch",
+        "type": "Type L",
+        "angle": "90 degree",
+        "end_connection": "Copper (CxC)",
+        "wall_thickness": "0.045 inch"
+      },
+      "brand": "Mueller",
+      "rating": 4.5,
+      "reviews": 76
+    },
+    {
+      "id": "BS-029",
+      "name": "Carrige Bolt - 1/2-13 x 6 inch - 10 Pack",
+      "description": "Zinc-plated steel carriage bolts for wood connections. Smooth, domed head with square neck. Designed for nut access from one side.",
+      "price": 14.99,
+      "category": "Fasteners",
+      "subcategory": "Bolts",
+      "image": "https://images.unsplash.com/photo-1581092921461-eab62e97a780?w=500&h=500&fit=crop",
+      "stock": 190,
+      "specs": {
+        "size": "1/2-13",
+        "length": "6 inch",
+        "finish": "Zinc",
+        "head": "Domed",
+        "quantity": "10 Pack"
+      },
+      "brand": "BuildStop Hardware",
+      "rating": 4.6,
+      "reviews": 93
+    },
+    {
+      "id": "BS-030",
+      "name": "Digital Tape Measure - 25 ft with Laser",
+      "description": "Professional tape measure with digital readout and laser distance measurement. Memory function and calculation features. Magnetic hook.",
+      "price": 49.99,
+      "category": "Tools",
+      "subcategory": "Measuring Tools",
+      "image": "https://images.unsplash.com/photo-1517649281203-dad836b4add5?w=500&h=500&fit=crop",
+      "stock": 65,
+      "specs": {
+        "length": "25 ft",
+        "blade_width": "1 inch",
+        "accuracy": "±1/16 inch",
+        "laser_range": "0-33 ft",
+        "battery": "CR2032 included"
+      },
+      "brand": "Milwaukee",
+      "rating": 4.8,
+      "reviews": 421
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2025-01-30",
+    "total_products": 30,
+    "categories": [
+      "Tools",
+      "Lumber",
+      "Electrical",
+      "Plumbing",
+      "Hardware",
+      "Fasteners",
+      "Paint"
+    ],
+    "price_range": {
+      "min": 4.49,
+      "max": 199.99
+    }
+  }
+}

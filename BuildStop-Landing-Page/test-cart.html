@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart Functionality Test - BuildStop Pro</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            padding: 40px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-section {
+            background: var(--color-surface);
+            padding: 30px;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-lg);
+        }
+        .test-section h2 {
+            margin-bottom: 20px;
+            color: var(--color-primary);
+        }
+        .test-button {
+            margin: 10px;
+        }
+        .cart-status {
+            background: var(--color-bg-alt);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+        }
+        .cart-status h3 {
+            margin-bottom: 10px;
+        }
+        #cartDebug {
+            font-family: monospace;
+            white-space: pre-wrap;
+            background: var(--gray-900);
+            color: #10b981;
+            padding: 15px;
+            border-radius: var(--border-radius-sm);
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🛒 Shopping Cart Test Page</h1>
+
+    <div class="test-section">
+        <h2>Test Products</h2>
+        <p>Click the buttons below to add products to the cart:</p>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px;">
+            <button class="btn btn-primary test-button" onclick="addTestProduct(1, 'Recycled Insulation Roll', 24.99)">
+                Add Insulation (£24.99)
+            </button>
+            <button class="btn btn-primary test-button" onclick="addTestProduct(2, 'Sustainable Lumber 2x4', 12.50)">
+                Add Lumber (£12.50)
+            </button>
+            <button class="btn btn-primary test-button" onclick="addTestProduct(3, 'Eco-Friendly Concrete Mix', 45.00)">
+                Add Concrete (£45.00)
+            </button>
+            <button class="btn btn-primary test-button" onclick="addTestProduct(4, 'Solar Roof Tiles', 89.99)">
+                Add Roof Tiles (£89.99)
+            </button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Cart Controls</h2>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button class="btn btn-outline" onclick="openCartModal()">
+                Open Cart Modal
+            </button>
+            <button class="btn btn-secondary" onclick="clearCart()">
+                Clear Cart
+            </button>
+            <button class="btn btn-outline" onclick="location.reload()">
+                Reload Page (Test Persistence)
+            </button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Cart Status</h2>
+        <div class="cart-status">
+            <h3>Current Cart Contents:</h3>
+            <div id="cartDebug"></div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>Manual Cart Icon Test</h2>
+        <p>The cart icon from the main page (for testing icon interactions):</p>
+        <div style="display: inline-flex; align-items: center; gap: 20px; margin-top: 15px;">
+            <button class="cart-icon-btn" onclick="openCartModal()" aria-label="Open cart" style="position: relative;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="/script.js"></script>
+    <script>
+        // Test helper functions
+        function addTestProduct(id, name, price) {
+            const product = {
+                id: id,
+                name: name,
+                variant: 'Standard',
+                price: price
+            };
+            addToCart(product);
+            updateCartDebug();
+        }
+
+        function clearCart() {
+            if (confirm('Are you sure you want to clear the cart?')) {
+                cart = [];
+                saveCart();
+                renderCartItems();
+                updateCartDebug();
+                alert('Cart cleared!');
+            }
+        }
+
+        function updateCartDebug() {
+            const debugEl = document.getElementById('cartDebug');
+            if (cart.length === 0) {
+                debugEl.textContent = 'Cart is empty';
+            } else {
+                const total = getCartTotal();
+                const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+                let output = `Total Items: ${itemCount}\n`;
+                output += `Total Value: £${total.toFixed(2)}\n\n`;
+                output += 'Items:\n';
+                cart.forEach(item => {
+                    output += `  - ${item.name} (${item.quantity}x £${item.price.toFixed(2)})\n`;
+                });
+                debugEl.textContent = output;
+            }
+        }
+
+        // Update debug display on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartDebug();
+
+            // Update debug whenever cart changes
+            const originalSaveCart = saveCart;
+            saveCart = function() {
+                originalSaveCart();
+                updateCartDebug();
+            };
+        });
+    </script>
+</body>
+</html>

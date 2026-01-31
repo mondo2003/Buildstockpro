@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Grid Test - BuildStop Pro</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/products.css">
+    <script src="/mockData.js"></script>
+    <script src="/products.js"></script>
+    <style>
+        body {
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+        .test-header {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-results {
+            background: white;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        .test-pass {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .test-fail {
+            color: #ef4444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1>🧪 Product Grid Test Suite</h1>
+        <p>Testing the BuildStop Pro product grid functionality</p>
+    </div>
+
+    <div id="test-results"></div>
+
+    <div class="test-results">
+        <h2>Products Grid Preview</h2>
+        <div class="category-filter">
+            <button class="category-btn active" data-category="All">All Materials</button>
+            <button class="category-btn" data-category="Insulation">Insulation</button>
+            <button class="category-btn" data-category="Lumber">Lumber</button>
+            <button class="category-btn" data-category="Concrete">Concrete</button>
+        </div>
+        <div id="products-grid" class="products-grid"></div>
+    </div>
+
+    <script>
+        // Test suite
+        const tests = [];
+
+        function addTest(name, passed, details) {
+            tests.push({ name, passed, details });
+        }
+
+        function runTests() {
+            const resultsDiv = document.getElementById('test-results');
+
+            // Test 1: Mock data loaded
+            addTest(
+                'Mock Data Loaded',
+                typeof window.mockProducts !== 'undefined',
+                window.mockProducts ? `Found ${window.mockProducts.length} products` : 'mockProducts not defined'
+            );
+
+            // Test 2: Helper functions available
+            addTest(
+                'Helper Functions Available',
+                typeof window.getCategories === 'function' &&
+                typeof window.getProductsByCategory === 'function' &&
+                typeof window.searchProducts === 'function',
+                'getCategories, getProductsByCategory, searchProducts'
+            );
+
+            // Test 3: Categories available
+            if (typeof window.getCategories === 'function') {
+                const categories = window.getCategories();
+                addTest(
+                    'Categories Available',
+                    categories.length > 0,
+                    `Found ${categories.length} categories: ${categories.join(', ')}`
+                );
+            }
+
+            // Test 4: Products have required fields
+            if (typeof window.mockProducts !== 'undefined') {
+                const requiredFields = ['id', 'name', 'price', 'category', 'description'];
+                const firstProduct = window.mockProducts[0];
+                const hasAllFields = requiredFields.every(field => field in firstProduct);
+                addTest(
+                    'Products Have Required Fields',
+                    hasAllFields,
+                    `Fields: ${requiredFields.join(', ')}`
+                );
+            }
+
+            // Test 5: Render function available
+            addTest(
+                'Render Function Available',
+                typeof renderProducts === 'function',
+                'renderProducts() function exists'
+            );
+
+            // Test 6: Render products
+            if (typeof renderProducts === 'function' && typeof window.mockProducts !== 'undefined') {
+                try {
+                    renderProducts(window.mockProducts);
+                    const grid = document.getElementById('products-grid');
+                    const productCards = grid.querySelectorAll('.product-card-grid');
+                    addTest(
+                        'Products Rendered',
+                        productCards.length > 0,
+                        `Rendered ${productCards.length} product cards`
+                    );
+                } catch (error) {
+                    addTest(
+                        'Products Rendered',
+                        false,
+                        `Error: ${error.message}`
+                    );
+                }
+            }
+
+            // Test 7: Category filtering
+            if (typeof window.getProductsByCategory === 'function') {
+                const insulationProducts = window.getProductsByCategory('Insulation');
+                addTest(
+                    'Category Filtering Works',
+                    insulationProducts.length > 0,
+                    `Found ${insulationProducts.length} Insulation products`
+                );
+            }
+
+            // Display results
+            let html = '<div class="test-results"><h2>Test Results</h2>';
+            html += '<table style="width: 100%; border-collapse: collapse;">';
+            html += '<thead><tr><th style="text-align: left; padding: 8px; border-bottom: 2px solid #ddd;">Test</th><th style="text-align: left; padding: 8px; border-bottom: 2px solid #ddd;">Result</th><th style="text-align: left; padding: 8px; border-bottom: 2px solid #ddd;">Details</th></tr></thead>';
+            html += '<tbody>';
+
+            let passedCount = 0;
+            tests.forEach(test => {
+                const resultClass = test.passassed ? 'test-pass' : 'test-fail';
+                const resultText = test.passassed ? '✓ PASS' : '✗ FAIL';
+                if (test.passassed) passedCount++;
+                html += `<tr>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">${test.name}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;" class="${resultClass}">${resultText}</td>
+                    <td style="padding: 8px; border-bottom: 1px solid #ddd;">${test.details}</td>
+                </tr>`;
+            });
+
+            html += '</tbody></table>';
+            html += `<p style="margin-top: 1rem; font-size: 1.2rem;"><strong>Results: ${passedCount}/${tests.length} tests passed</strong></p>`;
+            html += '</div>';
+
+            resultsDiv.innerHTML = html;
+
+            // Setup category filter buttons for testing
+            setTimeout(() => {
+                const categoryBtns = document.querySelectorAll('.category-btn');
+                categoryBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        categoryBtns.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        const category = this.getAttribute('data-category');
+                        const filteredProducts = window.getProductsByCategory(category);
+                        renderProducts(filteredProducts);
+                    });
+                });
+            }, 100);
+        }
+
+        // Run tests when DOM is ready
+        document.addEventListener('DOMContentLoaded', runTests);
+    </script>
+</body>
+</html>

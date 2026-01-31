@@ -55,8 +55,15 @@ function renderProductCard(product) {
 
 // Render products grid
 function renderProducts(products, containerId = 'products-grid') {
+    console.log('renderProducts called with', products.length, 'products for container', containerId);
     const container = document.getElementById(containerId);
-    if (!container) return;
+
+    if (!container) {
+        console.error('Container not found:', containerId);
+        return;
+    }
+
+    console.log('Container found, rendering products...');
 
     if (products.length === 0) {
         container.innerHTML = `
@@ -68,7 +75,10 @@ function renderProducts(products, containerId = 'products-grid') {
         return;
     }
 
-    container.innerHTML = products.map(renderProductCard).join('');
+    const productHTML = products.map(renderProductCard).join('');
+    console.log('Generated HTML for', products.length, 'products');
+    container.innerHTML = productHTML;
+    console.log('Products inserted into DOM');
 
     // Re-observe new product cards for animation
     const observerOptions = {
@@ -91,6 +101,8 @@ function renderProducts(products, containerId = 'products-grid') {
         el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(el);
     });
+
+    console.log('Product cards observed for animation');
 }
 
 // Add product to cart from grid
@@ -112,9 +124,25 @@ function addProductToCart(productId) {
 
 // Initialize products on page load
 function initializeProducts() {
-    if (typeof window.mockProducts !== 'undefined') {
+    console.log('initializeProducts called');
+    console.log('window.mockProducts:', window.mockProducts);
+
+    if (typeof window.mockProducts !== 'undefined' && window.mockProducts.length > 0) {
+        console.log('Rendering', window.mockProducts.length, 'products');
         renderProducts(window.mockProducts);
         setupCategoryFilters();
+    } else {
+        console.error('Mock products not available or empty!');
+        // Try again after a short delay
+        setTimeout(() => {
+            if (typeof window.mockProducts !== 'undefined' && window.mockProducts.length > 0) {
+                console.log('Retry successful: Rendering', window.mockProducts.length, 'products');
+                renderProducts(window.mockProducts);
+                setupCategoryFilters();
+            } else {
+                console.error('Still no products available after retry');
+            }
+        }, 500);
     }
 }
 
@@ -173,9 +201,15 @@ function closeBetaModal() {
 
 // Initialize products when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize immediately - mockData should already be loaded
-    console.log('Initializing product grid...');
-    initializeProducts();
+    // Small delay to ensure all scripts and data are loaded
+    setTimeout(() => {
+        console.log('Initializing product grid...');
+        console.log('Mock products available:', typeof window.mockProducts !== 'undefined');
+        if (typeof window.mockProducts !== 'undefined') {
+            console.log('Number of products:', window.mockProducts.length);
+        }
+        initializeProducts();
+    }, 100);
 });
 
 // Also initialize when window loads (fallback)
@@ -183,6 +217,10 @@ window.addEventListener('load', () => {
     const container = document.getElementById('products-grid');
     if (container && container.children.length === 0) {
         console.log('Fallback: Loading products on window load');
+        console.log('Mock products available:', typeof window.mockProducts !== 'undefined');
+        if (typeof window.mockProducts !== 'undefined') {
+            console.log('Number of products:', window.mockProducts.length);
+        }
         initializeProducts();
     }
 });
