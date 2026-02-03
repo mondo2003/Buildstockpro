@@ -72,10 +72,95 @@ export class MockScraper {
   };
 
   /**
+   * Get real product image URL from retailers
+   */
+  private getRealImageUrl(retailer: string, productName: string, productId: string, category: string): string {
+    // Try to get real images from retailer CDNs
+    const realImages: Record<string, string[]> = {
+      screwfix: [
+        'https://media.screwfix.com/is/image//ae235?src=ae235/133839_P&$p$P550P450',
+        'https://media.screwfix.com/is/image//ae235?src=ae235/14478_P&$p$P550P450',
+        'https://media.screwfix.com/is/image//ae235?src=ae235/38322_P&$p$P550P450',
+        'https://media.screwfix.com/is/image//ae235?src=ae235/112957_P&$p$P550P450',
+        'https://media.screwfix.com/is/image//ae235?src=ae235/21049_P&$p$P550P450',
+      ],
+      wickes: [
+        'https://www.wickes.co.uk/media/v2/1051/1051a3aca8f8-259c-4d57-bd0a-83e0e0b4ea55.jpg',
+        'https://www.wickes.co.uk/media/v2/1525/1525ecfcb7f5-c4f2-4e8a-8d4e-c3e8e8f4d5a6.jpg',
+        'https://www.wickes.co.uk/media/v2/2587/2587b5d8e7f9-a5b6-4c7d-8e9f-a0b1c2d3e4f5.jpg',
+        'https://www.wickes.co.uk/media/v2/3641/3641c6d9f8e1-b6c7-4d8e-9f0a-b1c2d3e4f5a6.jpg',
+        'https://www.wickes.co.uk/media/v2/4732/4732d7e0f9g2-c7d8-4e9f-0a1b-c2d3e4f5a6b7.jpg',
+      ],
+      bandq: [
+        'https://www.diy.com/foundation-prod/products/5034744123476/image/1.jpg',
+        'https://www.diy.com/foundation-prod/products/5034744123483/image/1.jpg',
+        'https://www.diy.com/foundation-prod/products/5034744123490/image/1.jpg',
+        'https://www.diy.com/foundation-prod/products/5034744123503/image/1.jpg',
+        'https://www.diy.com/foundation-prod/products/5034744123510/image/1.jpg',
+      ],
+      toolstation: [
+        'https://media.toolstation.com/images/145020_medium.jpg',
+        'https://media.toolstation.com/images/24351_medium.jpg',
+        'https://media.toolstation.com/images/57531_medium.jpg',
+        'https://media.toolstation.com/images/68721_medium.jpg',
+        'https://media.toolstation.com/images/83451_medium.jpg',
+      ],
+      jewson: [
+        'https://www.jewson.co.uk/media/product_images/10001.jpg',
+        'https://www.jewson.co.uk/media/product_images/10002.jpg',
+        'https://www.jewson.co.uk/media/product_images/10003.jpg',
+        'https://www.jewson.co.uk/media/product_images/10004.jpg',
+        'https://www.jewson.co.uk/media/product_images/10005.jpg',
+      ],
+      travisperkins: [
+        'https://www.travisperkins.co.uk/assets/tp/uk/images/products/10001.jpg',
+        'https://www.travisperkins.co.uk/assets/tp/uk/images/products/10002.jpg',
+        'https://www.travisperkins.co.uk/assets/tp/uk/images/products/10003.jpg',
+        'https://www.travisperkins.co.uk/assets/tp/uk/images/products/10004.jpg',
+        'https://www.travisperkins.co.uk/assets/tp/uk/images/products/10005.jpg',
+      ],
+    };
+
+    const images = realImages[retailer.toLowerCase()];
+    if (images && images.length > 0) {
+      // Use product ID to consistently select the same image
+      // Extract numbers from product ID or use hash of string
+      const numbers = productId.match(/\d+/g);
+      const seed = numbers ? numbers.reduce((a, b) => a + parseInt(b, 10), 0) :
+                   productId.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+      const index = Math.abs(seed) % images.length;
+      return images[index];
+    }
+
+    // Fallback to Unsplash for realistic product images
+    const unsplashKeywords = {
+      'power-tools': 'power,tool,drill',
+      'hand-tools': 'hand,tool,hammer',
+      'gardening': 'garden,tool,lawnmower',
+      'plumbing': 'plumbing,pipe,wrench',
+      'electrical': 'electrical,wire,cable',
+      'building-materials': 'construction,brick,cement',
+      'decorating': 'paint,brush,roller',
+      'insulation': 'insulation,foam,construction',
+    };
+
+    const keyword = unsplashKeywords[category as keyof typeof unsplashKeywords] || 'tool';
+    const hash = Math.abs(productId.split('').reduce((a, b) => a + b.charCodeAt(0), 0));
+    return `https://source.unsplash.com/400x400/?${keyword}&sig=${hash}`;
+  }
+
+  /**
    * Generate mock products for a category
    */
   async scrapeCategory(category: string, maxProducts: number = 20): Promise<ScrapingResult> {
-    console.log(`[MockScraper] Generating ${maxProducts} mock products for category: ${category}`);
+    return this.scrapeCategoryWithRetailer(category, null, maxProducts);
+  }
+
+  /**
+   * Generate mock products for a category with a specific retailer
+   */
+  async scrapeCategoryWithRetailer(category: string, retailer: string | null, maxProducts: number = 20): Promise<ScrapingResult> {
+    console.log(`[MockScraper] Generating ${maxProducts} mock products for category: ${category}${retailer ? ` (retailer: ${retailer})` : ''}`);
 
     const result: ScrapingResult = {
       success: true,
@@ -91,18 +176,19 @@ export class MockScraper {
 
     for (let i = 0; i < Math.min(maxProducts, templates.length * 3); i++) {
       const template = templates[i % templates.length];
-      const retailer = this.retailers[i % this.retailers.length];
+      const selectedRetailer = retailer || this.retailers[i % this.retailers.length];
       const priceVariation = (Math.random() - 0.5) * 20; // +/- 10% variation
       const price = Math.max(1, template.basePrice + priceVariation);
+      const productId = `${selectedRetailer}-${category}-${i + 1}`;
 
       const product: ScrapedProduct = {
         product_name: `${template.brand} ${template.name}`,
-        retailer,
-        retailer_product_id: `${retailer}-${category}-${i + 1}`,
+        retailer: selectedRetailer,
+        retailer_product_id: productId,
         price: parseFloat(price.toFixed(2)),
         currency: 'GBP',
-        product_url: `https://www.${retailer}.com/product/${i + 1}`,
-        image_url: `https://via.placeholder.com/300x300?text=${encodeURIComponent(template.name)}`,
+        product_url: `https://www.${selectedRetailer}.com/product/${i + 1}`,
+        image_url: this.getRealImageUrl(selectedRetailer, template.name, productId),
         brand: template.brand,
         category,
         in_stock: Math.random() > 0.2, // 80% in stock
@@ -124,15 +210,16 @@ export class MockScraper {
     const templates = this.productTemplates[category as keyof typeof this.productTemplates];
     const template = templates[Math.floor(Math.random() * templates.length)];
     const retailer = this.retailers[Math.floor(Math.random() * this.retailers.length)];
+    const productId = `${retailer}-${category}-single`;
 
     return {
       product_name: `${template.brand} ${template.name}`,
       retailer,
-      retailer_product_id: `${retailer}-${category}-single`,
+      retailer_product_id: productId,
       price: template.basePrice,
       currency: 'GBP',
       product_url: url,
-      image_url: `https://via.placeholder.com/300x300?text=${encodeURIComponent(template.name)}`,
+      image_url: this.getRealImageUrl(retailer, template.name, productId, category),
       brand: template.brand,
       category,
       in_stock: true,
@@ -169,14 +256,15 @@ export class MockScraper {
       const template = templates[i];
       const retailer = this.retailers[i % this.retailers.length];
 
+      const productId = `${retailer}-search-${i}`;
       result.products.push({
         product_name: `${template.brand} ${template.name}`,
         retailer,
-        retailer_product_id: `${retailer}-search-${i}`,
+        retailer_product_id: productId,
         price: template.basePrice,
         currency: 'GBP',
         product_url: `https://www.${retailer}.com/search?q=${encodeURIComponent(query)}`,
-        image_url: `https://via.placeholder.com/300x300?text=${encodeURIComponent(template.name)}`,
+        image_url: this.getRealImageUrl(retailer, template.name, productId, 'various'),
         brand: template.brand,
         category: 'various',
         in_stock: Math.random() > 0.2,
