@@ -7,7 +7,7 @@ import { priceScraper } from '../services/priceScraper';
 import { supabase } from '../utils/database';
 
 console.log('========================================');
-console.log('  Price Scraping - Database Test');
+console.log('  Price Scraping - LIVE DATA TEST');
 console.log('========================================\n');
 
 async function testPriceScraping() {
@@ -18,9 +18,9 @@ async function testPriceScraping() {
 
     const result = await priceScraper.scrapeCategory({
       retailer: 'screwfix',
-      category: 'power-tools',
-      limit: 5,
-      useMockData: true,
+      category: 'tools/power-tools',
+      limit: 10,
+      useMockData: false, // LIVE DATA
     });
 
     console.log(`\nScraping Result:`);
@@ -96,7 +96,8 @@ async function testPriceScraping() {
     console.log('  All Tests Complete');
     console.log('========================================\n');
     console.log('✅ Database integration is working!');
-    console.log('✅ Mock data can be scraped and saved!');
+    console.log('✅ LIVE data scraping is enabled!');
+    console.log('✅ Real prices from Screwfix website!');
     console.log('✅ Frontend can fetch live prices from API!\n');
 
   } catch (error) {

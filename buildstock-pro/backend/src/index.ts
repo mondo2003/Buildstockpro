@@ -18,9 +18,14 @@ import { userRoutes } from './routes/user';
 import { userPreferencesRoutes } from './routes/user-preferences';
 import { adminRoutes } from './routes/adminRoutes';
 import { merchantsRoutes } from './routes/merchants';
+import { merchantContactRoutes } from './routes/merchantContact';
 import { sentryTestRoutes } from './routes/sentry-test';
 import { feedbackRoutes } from './routes/feedback';
 import { pricesRoutes } from './routes/prices';
+import { adminPricesRoutes } from './routes/admin-prices';
+import { adminCacheRoutes } from './routes/admin-cache';
+import { quoteRoutes } from './routes/quotes';
+import { bulkOrdersRoutes } from './routes/bulkOrders';
 import { syncService } from './services/sync.service';
 import { jobScheduler } from './jobs/scheduler';
 import { requireApiKey } from './middleware/api-key.middleware';
@@ -149,6 +154,11 @@ const app = new Elysia()
       analytics: '/api/analytics/search',
       feedback: '/api/v1/feedback',
       prices: '/api/prices',
+      'admin-cache': '/api/v1/admin/cache',
+      quotes: '/api/v1/quotes',
+      'bulk-orders': '/api/v1/bulk-orders',
+      'merchant-contact': '/api/v1/merchant/contact',
+      'merchant-branches': '/api/v1/merchant/:merchantId/branches',
     },
   }))
   // Mount route groups
@@ -169,7 +179,12 @@ const app = new Elysia()
   .use(sentryTestRoutes)
   .use(feedbackRoutes)
   .use(pricesRoutes)
+  .use(adminPricesRoutes)
+  .use(adminCacheRoutes)
   .use(merchantsRoutes)
+  .use(merchantContactRoutes)
+  .use(quoteRoutes)
+  .use(bulkOrdersRoutes)
   // Auth routes (placeholder for future use)
   .group('/api/v1/auth', (app) =>
     app

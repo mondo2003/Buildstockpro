@@ -1,20 +1,49 @@
 import { Elysia } from 'elysia';
-import { query } from '../utils/database.js';
+import { supabase } from '../utils/database.js';
 
 export const merchantsRoutes = new Elysia({ prefix: '/api/v1/merchants' })
-  .get('/', async () => {
+  .get('/', async ({ query }) => {
     try {
-      const merchants = await query(`
-        SELECT 
-          id, name, email, phone, website, address, latitude, longitude,
-          sync_enabled, sync_url, last_sync_at, created_at, updated_at
-        FROM merchants
-        ORDER BY name
-      `);
+      const page = query.page ? parseInt(query.page as string) : 1;
+      const pageSize = query.limit ? parseInt(query.limit as string) : 20;
+
+      const start = (page - 1) * pageSize;
+      const end = start + pageSize - 1;
+
+      // Get unique retailers from scraped_prices
+      const { data, error } = await supabase
+        .from('scraped_prices')
+        .select('retailer');
+
+      if (error) {
+        throw error;
+      }
+
+      // Extract unique retailers
+      const uniqueRetailers = [...new Set(data?.map((p: any) => p.retailer) || [])];
+
+      // Pagination for unique retailers
+      const paginatedRetailers = uniqueRetailers.slice(start, end + 1);
+
+      const merchants = paginatedRetailers.map(retailer => ({
+        id: retailer,
+        name: retailer.charAt(0).toUpperCase() + retailer.slice(1),
+        website: '',
+        isActive: true,
+        syncStatus: 'active',
+      }));
+
+      const total = uniqueRetailers.length;
 
       return {
         success: true,
         data: merchants,
+        meta: {
+          total,
+          page,
+          pageSize,
+          totalPages: Math.ceil(total / pageSize),
+        },
         timestamp: new Date().toISOString(),
       };
     } catch (error) {
@@ -28,15 +57,18 @@ export const merchantsRoutes = new Elysia({ prefix: '/api/v1/merchants' })
   })
   .get('/:id', async ({ params }) => {
     try {
-      const merchant = await query(`
-        SELECT 
-          id, name, email, phone, website, address, latitude, longitude,
-          sync_enabled, sync_url, last_sync_at, created_at, updated_at
-        FROM merchants
-        WHERE id = $1
-      `, [params.id]);
+      // Check if retailer exists in scraped_prices
+      const { data, error } = await supabase
+        .from('scraped_prices')
+        .select('retailer')
+        .eq('retailer', params.id)
+        .limit(1);
 
-      if (!merchant || merchant.length === 0) {
+      if (error) {
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
         return {
           success: false,
           error: 'Merchant not found',
@@ -44,9 +76,17 @@ export const merchantsRoutes = new Elysia({ prefix: '/api/v1/merchants' })
         };
       }
 
+      const merchant = {
+        id: params.id,
+        name: params.id.charAt(0).toUpperCase() + params.id.slice(1),
+        website: '',
+        isActive: true,
+        syncStatus: 'active',
+      };
+
       return {
         success: true,
-        data: merchant[0],
+        data: merchant,
         timestamp: new Date().toISOString(),
       };
     } catch (error) {
