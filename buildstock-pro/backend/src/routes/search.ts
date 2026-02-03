@@ -1,137 +1,199 @@
 import { Elysia, t } from 'elysia';
-import { rawQuery, supabase } from '../utils/database.js';
+import { supabase } from '../utils/database.js';
+import { cacheService, createSearchCacheKey } from '../services/cacheService.js';
 
 export const searchRoutes = new Elysia({ prefix: '/api/v1/search' })
   .get('/', async ({ query }) => {
+    const startTime = Date.now();
+
     try {
       const {
-        search = '',
+        query: searchQuery = '',
         category,
-        minPrice,
-        maxPrice,
-        ecoRating,
-        inStock,
-        sortBy = 'relevance',
+        min_price: minPrice,
+        max_price: maxPrice,
+        in_stock: inStock,
+        merchant_ids,
+        sort_by: sortBy = 'relevance',
         page = '1',
-        limit = '20',
+        page_size: limit = '20',
       } = query as any;
 
-      const offset = (parseInt(page) - 1) * parseInt(limit);
+      // Parse merchant IDs from comma-separated string
+      const merchantList = merchant_ids ? merchant_ids.split(',').filter(Boolean) : [];
 
-      let dbQuery = `
-        SELECT DISTINCT 
-          p.*,
-          json_agg(
-            json_build_object(
-              'id', l.id,
-              'merchant_id', l.merchant_id,
-              'merchant_name', m.name,
-              'price', l.price,
-              'stock_level', l.stock_level,
-              'stock_quantity', l.stock_quantity,
-              'distance', l.distance
-            )
-          ) as listings
-        FROM products p
-        LEFT JOIN listings l ON l.product_id = p.id
-        LEFT JOIN merchants m ON m.id = l.merchant_id
-        WHERE 1=1
-      `;
-      const params: any[] = [];
-      let paramIndex = 1;
+      // Parse numeric values
+      const pageNum = parseInt(page);
+      const pageSize = parseInt(limit);
+      const minPriceNum = minPrice ? parseFloat(minPrice) : undefined;
+      const maxPriceNum = maxPrice ? parseFloat(maxPrice) : undefined;
 
-      if (search) {
-        dbQuery += ` AND (p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR p.category ILIKE $${paramIndex})`;
-        params.push(`%${search}%`);
-        paramIndex++;
+      // Create cache key
+      const cacheKey = createSearchCacheKey({
+        query: searchQuery,
+        category,
+        min_price: minPriceNum,
+        max_price: maxPriceNum,
+        in_stock: inStock === 'true' || inStock === true,
+        merchant_ids: merchantList,
+        sort_by: sortBy,
+        page: pageNum,
+        page_size: pageSize,
+      });
+
+      // Try to get from cache (10 minute TTL)
+      const cachedResult = cacheService.get(cacheKey, 10 * 60 * 1000);
+      if (cachedResult) {
+        const cacheTime = Date.now() - startTime;
+        console.log(`[Search] Cache hit in ${cacheTime}ms`);
+        return {
+          ...cachedResult,
+          _cache: {
+            hit: true,
+            time: cacheTime,
+          },
+        };
+      }
+
+      console.log(`[Search] Cache miss - executing database query`);
+
+      const start = (pageNum - 1) * pageSize;
+      const end = start + pageSize - 1;
+
+      // Build query
+      let dbQuery = supabase
+        .from('scraped_prices')
+        .select('*', { count: 'exact' });
+
+      // Apply filters
+      if (searchQuery) {
+        dbQuery = dbQuery.ilike('product_name', `%${searchQuery}%`);
       }
 
       if (category) {
-        dbQuery += ` AND p.category = $${paramIndex}`;
-        params.push(category);
-        paramIndex++;
+        dbQuery = dbQuery.eq('category', category);
       }
 
-      if (minPrice) {
-        dbQuery += ` AND l.price >= $${paramIndex}`;
-        params.push(parseFloat(minPrice));
-        paramIndex++;
+      if (minPriceNum !== undefined) {
+        dbQuery = dbQuery.gte('price', minPriceNum);
       }
 
-      if (maxPrice) {
-        dbQuery += ` AND l.price <= $${paramIndex}`;
-        params.push(parseFloat(maxPrice));
-        paramIndex++;
+      if (maxPriceNum !== undefined) {
+        dbQuery = dbQuery.lte('price', maxPriceNum);
       }
 
-      if (ecoRating) {
-        dbQuery += ` AND p.eco_rating = $${paramIndex}`;
-        params.push(ecoRating);
-        paramIndex++;
+      if (inStock === true || inStock === 'true') {
+        dbQuery = dbQuery.eq('in_stock', true);
       }
 
-      if (inStock === 'true') {
-        dbQuery += ` AND l.stock_quantity > 0`;
+      // Filter by merchants (retailers)
+      if (merchantList.length > 0) {
+        dbQuery = dbQuery.in('retailer', merchantList);
       }
 
-      dbQuery += ` GROUP BY p.id`;
-
-      // Sorting
+      // Apply sorting
       switch (sortBy) {
         case 'price_asc':
-          dbQuery += ` ORDER BY MIN(l.price) ASC NULLS LAST`;
+          dbQuery = dbQuery.order('price', { ascending: true });
           break;
         case 'price_desc':
-          dbQuery += ` ORDER BY MIN(l.price) DESC NULLS LAST`;
+          dbQuery = dbQuery.order('price', { ascending: false });
           break;
-        case 'rating':
-          dbQuery += ` ORDER BY p.average_rating DESC NULLS LAST`;
+        case 'name_asc':
+          dbQuery = dbQuery.order('product_name', { ascending: true });
           break;
-        case 'carbon':
-          dbQuery += ` ORDER BY p.carbon_footprint ASC NULLS LAST`;
+        case 'name_desc':
+          dbQuery = dbQuery.order('product_name', { ascending: false });
           break;
-        case 'distance':
-          dbQuery += ` ORDER BY MIN(l.distance) ASC NULLS LAST`;
+        case 'stock_level':
+          dbQuery = dbQuery.order('in_stock', { ascending: false });
           break;
         default:
-          dbQuery += ` ORDER BY p.name ASC`;
+          dbQuery = dbQuery.order('scraped_at', { ascending: false });
       }
 
-      dbQuery += ` LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`;
-      params.push(parseInt(limit), offset);
+      // Apply pagination
+      dbQuery = dbQuery.range(start, end);
 
-      const products = await rawQuery(dbQuery, params);
+      const { data: products, error, count } = await dbQuery;
 
-      // Get total count
-      let countQuery = `SELECT COUNT(DISTINCT p.id) as count FROM products p LEFT JOIN listings l ON l.product_id = p.id WHERE 1=1`;
-      const countParams: any[] = [];
-      let countParamIndex = 1;
-
-      if (search) {
-        countQuery += ` AND (p.name ILIKE $${countParamIndex} OR p.description ILIKE $${countParamIndex} OR p.category ILIKE $${countParamIndex})`;
-        countParams.push(`%${search}%`);
-        countParamIndex++;
+      if (error) {
+        throw error;
       }
 
-      if (category) {
-        countQuery += ` AND p.category = $${countParamIndex}`;
-        countParams.push(category);
-        countParamIndex++;
-      }
+      const total = count || 0;
 
-      const countResult = await rawQuery(countQuery, countParams);
-      const total = parseInt(countResult[0]?.count || '0');
+      // Format response to match frontend expectations
+      const formattedData = (products || []).map((p: any) => ({
+        product: {
+          id: p.id,
+          name: p.product_name,
+          sku: p.retailer_product_id || '',
+          category: p.category || '',
+          description: p.product_description || p.stock_text || '',
+          specifications: p.brand || '',
+          images: p.image_url || '',
+          created_at: p.created_at,
+          updated_at: p.updated_at,
+        },
+        listing: {
+          id: p.id,
+          productId: p.id,
+          merchantId: p.retailer,
+          price: p.price?.toString() || '0',
+          currency: p.currency || 'GBP',
+          stockLevel: p.in_stock ? 1 : 0,
+          lastUpdated: p.scraped_at,
+          productUrl: p.product_url,
+        },
+        merchant: {
+          id: p.retailer,
+          name: p.retailer.charAt(0).toUpperCase() + p.retailer.slice(1),
+          website: '',
+          logoUrl: `https://logo.clearbit.com/${p.retailer}.com`,
+          isActive: true,
+        },
+        // Additional fields for enhanced product card
+        _enhanced: {
+          inStock: p.in_stock,
+          stockText: p.stock_text,
+          brand: p.brand,
+        },
+      }));
 
-      return {
+      const result = {
         success: true,
-        data: products,
-        pagination: {
-          page: parseInt(page),
-          limit: parseInt(limit),
+        data: formattedData,
+        meta: {
           total,
-          totalPages: Math.ceil(total / parseInt(limit)),
+          page: pageNum,
+          pageSize,
+          totalPages: Math.ceil(total / pageSize),
+          query: searchQuery,
+          filters: {
+            category,
+            minPrice: minPriceNum,
+            maxPrice: maxPriceNum,
+            inStock: inStock === 'true',
+            merchantIds: merchantList,
+            sortBy,
+          },
         },
         timestamp: new Date().toISOString(),
+      };
+
+      // Cache the result
+      cacheService.set(cacheKey, result);
+
+      const dbTime = Date.now() - startTime;
+      console.log(`[Search] Database query completed in ${dbTime}ms - result cached`);
+
+      return {
+        ...result,
+        _cache: {
+          hit: false,
+          time: dbTime,
+        },
       };
     } catch (error) {
       console.error('Search error:', error);
