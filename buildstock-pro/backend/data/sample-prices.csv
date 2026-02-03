@@ -1,0 +1,16 @@
+product_name,retailer,retailer_product_id,price,currency,category,in_stock,stock_text,brand
+DeWalt DCD777C2GB 18V Li-Ion XR Brushless Combi Drill 2 x 2Ah,screwfix,dewalt-dcd777c2gb,149.99,GBP,power-tools,true,In Stock,DeWalt
+Makita DHP483Z 18V LXT Brushless Combi Drill Body Only,wickes,makita-dhp483z,129.99,GBP,power-tools,true,In Stock,Makita
+Bosch GSB 18V-55 18V Cordless Combi Drill 2 x 5Ah,bandq,bosch-gsb18v55,159.99,GBP,power-tools,false,Out of Stock,Bosch
+Milwaukee M18 FPDB-502B 18V Fuel Brushless Percussion Drill,toolstation,milwaukee-m18fpdb,199.99,GBP,power-tools,true,Low Stock,Milwaukee
+Hitachi DV18DSDL2 18V Cordless Hammer Driver Drill,travisperkins,hitachi-dv18d,119.99,GBP,power-tools,true,In Stock,Hitachi
+Stanley FATMAX FMHT82821 Claw Hammer 20oz,screwfix,stanley-fmht82821,15.99,GBP,hand-tools,true,In Stock,Stanley
+Bahco 2444-21 Milled Edge Adjustable Wrench 21inch,wickes,bahco-2444-21,24.99,GBP,hand-tools,true,In Stock,Bahco
+Wera 0507359401 Kraftform Plus 334 Screwdriver Set 50 Piece,bandq,wera-0507359401,89.99,GBP,hand-tools,true,In Stock,Wera
+Stabila 196S-2 1200mm Magnetic Spirit Level 2 Vial,toolstation,stabila-196s-2,49.99,GBP,hand-tools,false,Out of Stock,Stabila
+Irwin Vise-Groove 2078300 Locking Pliers 250mm,travisperkins,irwin-2078300,29.99,GBP,hand-tools,true,In Stock,Irwin
+Flymo EasiGlide 300 Electric Lawnmower 30cm 1200W,screwfix,flymo-easiglide300,89.99,GBP,gardening,true,In Stock,Flymo
+Bosch ARM 32 Electric Lawnmower 32cm 1200W,wickes,bosch-arm32,99.99,GBP,gardening,true,In Stock,Bosch
+Hozelock 2415 0000 Green Power Sensor Controller Plus,bandq,hoz-elock-2415,39.99,GBP,gardening,true,In Stock,Hozelock
+Spear & Jackson Neverbend Stainless Steel Border Spade,toolstation,spear-jackson-spade,34.99,GBP,gardening,false,Out of Stock,Spear & Jackson
+Fiskars 1027135 Solid Smart Spade B,travisperkins,fiskars-1027135,44.99,GBP,gardening,true,In Stock,Fiskars
