@@ -6,6 +6,7 @@ import { Star, MapPin, Leaf } from 'lucide-react';
 import { Product } from '@/lib/types';
 import { getProductById } from '@/lib/mockData';
 import { ProductImageGallery } from '@/components/ProductImageGallery';
+import { ContactMerchantButton } from '@/components/merchant-contact';
 
 // This would normally fetch from the API
 async function getProduct(id: string): Promise<Product | null> {
@@ -161,6 +162,19 @@ export default async function ProductPage({
                   <Button className="w-full" size="lg" disabled={product.stock.level === 'out-of-stock'}>
                     {product.stock.level === 'out-of-stock' ? 'Out of Stock' : 'Reserve for Pickup'}
                   </Button>
+
+                  {/* Contact Merchant Button */}
+                  {product.suppliers[0] && (
+                    <ContactMerchantButton
+                      merchantId={product.suppliers[0].id}
+                      merchantName={product.suppliers[0].name}
+                      productId={product.id}
+                      productName={product.name}
+                      buttonLabel="Contact Merchant about this Product"
+                      variant="outline"
+                      className="w-full"
+                    />
+                  )}
                 </CardContent>
               </Card>
 

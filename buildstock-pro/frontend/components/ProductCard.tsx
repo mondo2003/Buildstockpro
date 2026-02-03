@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Star, MapPin, Leaf, Package, ShoppingCart, ExternalLink, Check, Car } from 'lucide-react';
+import { Star, MapPin, Leaf, Package, ShoppingCart, ExternalLink, Check, Car, MessageSquare } from 'lucide-react';
 import { Product } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { useState, useEffect } from 'react';
@@ -13,6 +13,7 @@ import { useCart } from '@/context/CartContext';
 import { toast } from 'sonner';
 import { formatDistance } from '@/hooks/useGeolocation';
 import { formatDistanceToNow } from 'date-fns';
+import { ContactMerchantButton } from '@/components/merchant-contact';
 
 interface ProductCardProps {
   product: Product;
@@ -453,34 +454,47 @@ export function ProductCard({
                   Unavailable
                 </Button>
               ) : (
-                <Button
-                  size="sm"
-                  onClick={handleReserve}
-                  disabled={isReserving}
-                  className={cn(
-                    'shadow-md hover:shadow-lg transition-shadow group/btn',
-                    addedToCart && 'bg-accent hover:bg-accent'
-                  )}
-                >
-                  <div className="flex items-center gap-2">
-                    {isReserving ? (
-                      <>
-                        <span className="animate-spin">⟳</span>
-                        Adding...
-                      </>
-                    ) : addedToCart ? (
-                      <>
-                        <Check className="w-4 h-4" />
-                        Added!
-                      </>
-                    ) : (
-                      <>
-                        <ShoppingCart className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
-                        Add to Cart
-                      </>
+                <>
+                  <Button
+                    size="sm"
+                    onClick={handleReserve}
+                    disabled={isReserving}
+                    className={cn(
+                      'shadow-md hover:shadow-lg transition-shadow group/btn flex-1',
+                      addedToCart && 'bg-accent hover:bg-accent'
                     )}
-                  </div>
-                </Button>
+                  >
+                    <div className="flex items-center gap-2">
+                      {isReserving ? (
+                        <>
+                          <span className="animate-spin">⟳</span>
+                          Adding...
+                        </>
+                      ) : addedToCart ? (
+                        <>
+                          <Check className="w-4 h-4" />
+                          Added!
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingCart className="w-4 h-4 group-hover/btn:scale-110 transition-transform" />
+                          Add to Cart
+                        </>
+                      )}
+                    </div>
+                  </Button>
+
+                  <ContactMerchantButton
+                    merchantId={nearestSupplier.id}
+                    merchantName={nearestSupplier.name}
+                    productId={product.id}
+                    productName={product.name}
+                    buttonLabel=""
+                    variant="outline"
+                    size="icon"
+                    className="shadow-md hover:shadow-lg transition-shadow"
+                  />
+                </>
               )}
             </div>
           </div>

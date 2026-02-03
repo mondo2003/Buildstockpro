@@ -53,6 +53,12 @@ export function Header() {
     { href: '/dashboard', label: 'Dashboard' },
   ];
 
+  const actionLinks = [
+    { href: '/quotes', label: 'Quotes' },
+    { href: '/bulk-orders', label: 'Bulk Orders' },
+    { href: '/contact-requests', label: 'Contact Requests' },
+  ];
+
   return (
     <>
     <header
@@ -83,6 +89,25 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+
+            {/* Actions Dropdown/Section */}
+            <div className="relative group">
+              <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors">
+                Actions
+              </button>
+              {/* Dropdown Menu */}
+              <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                {actionLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-primary/5 hover:text-primary first:rounded-t-lg last:rounded-b-lg transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
 
             {/* Cart Icon */}
             <button
@@ -150,6 +175,21 @@ export function Header() {
                 href={link.href}
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            {/* Actions Section */}
+            <div className="px-4 py-2 mt-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Actions
+            </div>
+            {actionLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block px-4 py-3 text-base font-medium text-gray-700 hover:text-primary hover:bg-primary/5 rounded-lg transition-colors ml-4"
               >
                 {link.label}
               </Link>
