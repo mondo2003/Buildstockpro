@@ -14,6 +14,14 @@ export interface ScrapedProduct {
   category: string;
   in_stock: boolean;
   stock_text: string;
+  unit_price?: number;
+  unit_type?: 'each' | 'meter' | 'kg' | 'sqm' | 'litre' | 'pack' | 'pair' | 'set' | 'tonne' | 'm2' | 'm3';
+  specifications?: Record<string, any>;
+  is_sale?: boolean;
+  was_price?: number;
+  product_description?: string;
+  manufacturer_sku?: string;
+  barcode?: string;
 }
 
 export interface ScraperConfig {
