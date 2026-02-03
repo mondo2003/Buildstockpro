@@ -134,19 +134,19 @@ export class MockScraper {
 
     // Fallback to Unsplash for realistic product images
     const unsplashKeywords = {
-      'power-tools': 'power,tool,drill',
-      'hand-tools': 'hand,tool,hammer',
-      'gardening': 'garden,tool,lawnmower',
-      'plumbing': 'plumbing,pipe,wrench',
-      'electrical': 'electrical,wire,cable',
-      'building-materials': 'construction,brick,cement',
-      'decorating': 'paint,brush,roller',
-      'insulation': 'insulation,foam,construction',
+      'power-tools': 'power-drill',
+      'hand-tools': 'tools',
+      'gardening': 'garden-tools',
+      'plumbing': 'plumbing-tools',
+      'electrical': 'electrical-tools',
+      'building-materials': 'construction',
+      'decorating': 'paint-brush',
+      'insulation': 'construction-materials',
     };
 
-    const keyword = unsplashKeywords[category as keyof typeof unsplashKeywords] || 'tool';
+    const keyword = unsplashKeywords[category as keyof typeof unsplashKeywords] || 'tools';
     const hash = Math.abs(productId.split('').reduce((a, b) => a + b.charCodeAt(0), 0));
-    return `https://source.unsplash.com/400x400/?${keyword}&sig=${hash}`;
+    return `https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=400&fit=crop&auto=format&sig=${hash}`;
   }
 
   /**
@@ -188,7 +188,7 @@ export class MockScraper {
         price: parseFloat(price.toFixed(2)),
         currency: 'GBP',
         product_url: `https://www.${selectedRetailer}.com/product/${i + 1}`,
-        image_url: this.getRealImageUrl(selectedRetailer, template.name, productId),
+        image_url: this.getRealImageUrl(selectedRetailer, template.name, productId, category),
         brand: template.brand,
         category,
         in_stock: Math.random() > 0.2, // 80% in stock

@@ -248,7 +248,7 @@ export class EnhancedMockScraper {
   /**
    * Get real product image URL from retailers
    */
-  private getRealImageUrl(retailer: string, productName: string, productId: string): string {
+  private getRealImageUrl(retailer: string, productName: string, productId: string, category: string = 'various'): string {
     // Try to get real images from retailer CDNs
     const realImages: Record<string, string[]> = {
       screwfix: [
@@ -317,7 +317,7 @@ export class EnhancedMockScraper {
         price: parseFloat(price.toFixed(2)),
         currency: 'GBP',
         product_url: `https://www.${retailer}.com/p/${template.sku}`,
-        image_url: this.getRealImageUrl(retailer, template.name, productId),
+        image_url: this.getRealImageUrl(retailer, template.name, productId, category),
         brand: template.brand,
         category,
         in_stock: Math.random() > 0.2,
@@ -356,7 +356,7 @@ export class EnhancedMockScraper {
       price: template.basePrice,
       currency: 'GBP',
       product_url: url,
-      image_url: this.getRealImageUrl(retailer, template.name, productId),
+      image_url: this.getRealImageUrl(retailer, template.name, productId, category),
       brand: template.brand,
       category,
       in_stock: true,
@@ -406,7 +406,7 @@ export class EnhancedMockScraper {
         price: template.basePrice,
         currency: 'GBP',
         product_url: `https://www.${retailer}.com/search?q=${encodeURIComponent(query)}`,
-        image_url: this.getRealImageUrl(retailer, template.name, productId),
+        image_url: this.getRealImageUrl(retailer, template.name, productId, 'various'),
         brand: template.brand,
         category: 'various',
         in_stock: Math.random() > 0.2,
