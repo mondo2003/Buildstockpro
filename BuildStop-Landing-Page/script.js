@@ -1063,3 +1063,18 @@ document.addEventListener('keydown', (e) => {
         }
     }
 });
+
+// ============================================
+// EXPOSE CART FUNCTIONS TO WINDOW
+// ============================================
+// Must be at the END after all functions are defined
+// This makes them available to other scripts (products.js)
+window.addToCart = addToCart;
+window.removeFromCart = removeFromCart;
+window.updateQuantity = updateQuantity;
+window.getCartTotal = getCartTotal;
+window.openCartModal = openCartModal;
+window.closeCartModal = closeCartModal;
+window.renderCartItems = renderCartItems;
+window.addDemoProductToCart = addDemoProductToCart;
+window.handleCheckout = handleCheckout;

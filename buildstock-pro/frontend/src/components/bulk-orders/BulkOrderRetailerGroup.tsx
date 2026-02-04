@@ -3,9 +3,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Store, Package, PoundSterling, Clock } from 'lucide-react';
-import { BulkOrderRetailer } from '@/types/bulkOrder';
+import { BulkOrderRetailer } from '@/src/types/bulkOrder';
 import { cn } from '@/lib/utils';
-import { BulkOrderItem } from '@/types/bulkOrder';
+import { BulkOrderItem } from '@/src/types/bulkOrder';
 
 interface BulkOrderRetailerGroupProps {
   retailer: BulkOrderRetailer;

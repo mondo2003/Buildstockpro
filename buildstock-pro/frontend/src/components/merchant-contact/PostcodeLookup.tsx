@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { MapPin, Search, X } from 'lucide-react';
-import { merchantContactApi } from '@/lib/api/merchantContact';
+import { merchantContactApi } from '@/src/lib/api/merchantContact';
 import { toast } from 'sonner';
 
 interface PostcodeLookupProps {

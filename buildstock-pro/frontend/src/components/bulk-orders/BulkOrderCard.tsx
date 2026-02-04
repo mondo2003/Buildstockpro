@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BulkOrderStatusBadge } from './BulkOrderStatusBadge';
-import { BulkOrder } from '@/types/bulkOrder';
+import { BulkOrder } from '@/src/types/bulkOrder';
 import { Calendar, Package, Store, PoundSterling, ArrowRight } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 

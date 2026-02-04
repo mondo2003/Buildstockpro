@@ -1,11 +1,11 @@
 'use client';
 
-import { Branch } from '@/types/merchantContact';
+import { Branch } from '@/src/types/merchantContact';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Phone, Mail, Navigation, ExternalLink } from 'lucide-react';
-import { merchantContactApi } from '@/lib/api/merchantContact';
+import { merchantContactApi } from '@/src/lib/api/merchantContact';
 import { cn } from '@/lib/utils';
 
 interface BranchCardProps {

@@ -1,6 +1,6 @@
 'use client';
 
-import { MerchantContactRequest, MerchantContactResponse } from '@/types/merchantContact';
+import { MerchantContactRequest, MerchantContactResponse } from '@/src/types/merchantContact';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { User, Building2, Clock } from 'lucide-react';

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { MapPin, FileText } from 'lucide-react';
 import { toast } from 'sonner';
-import { SelectedBulkItem } from '@/types/bulkOrder';
+import { SelectedBulkItem } from '@/src/types/bulkOrder';
 import { BulkOrderItemRow } from './BulkOrderItemRow';
 
 interface BulkOrderFormProps {

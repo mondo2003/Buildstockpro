@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { BulkOrderStatusBadge } from './BulkOrderStatusBadge';
 import { BulkOrderSummary } from './BulkOrderSummary';
 import { BulkOrderRetailerGroup } from './BulkOrderRetailerGroup';
-import { BulkOrder } from '@/types/bulkOrder';
+import { BulkOrder } from '@/src/types/bulkOrder';
 import { ArrowLeft, Edit, Trash2, Send, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { CreateContactRequest, Branch } from '@/types/merchantContact';
+import { CreateContactRequest, Branch } from '@/src/types/merchantContact';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { ContactMethodSelector } from './ContactMethodSelector';
 import { PostcodeLookup } from './PostcodeLookup';
 import { BranchFinder } from './BranchFinder';
-import { merchantContactApi } from '@/lib/api/merchantContact';
+import { merchantContactApi } from '@/src/lib/api/merchantContact';
 import { Loader2, Send, Package, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';

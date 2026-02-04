@@ -107,19 +107,40 @@ function renderProducts(products, containerId = 'products-grid') {
 
 // Add product to cart from grid
 function addProductToCart(productId) {
-    if (typeof window.mockProducts !== 'undefined') {
-        const product = window.mockProducts.find(p => p.id === productId);
-        if (product) {
-            const cartProduct = {
-                id: product.id,
-                name: product.name,
-                variant: product.category,
-                price: product.price,
-                image: product.image
-            };
-            addToCart(cartProduct);
-        }
+    console.log('addProductToCart called with productId:', productId);
+    console.log('window.mockProducts available:', typeof window.mockProducts !== 'undefined');
+    console.log('window.addToCart available:', typeof window.addToCart !== 'undefined');
+
+    if (typeof window.mockProducts === 'undefined') {
+        console.error('window.mockProducts is not defined!');
+        alert('Error: Products not loaded. Please refresh the page.');
+        return;
     }
+
+    if (typeof window.addToCart === 'undefined') {
+        console.error('window.addToCart is not defined!');
+        alert('Error: Cart not initialized. Please refresh the page.');
+        return;
+    }
+
+    const product = window.mockProducts.find(p => p.id === productId);
+    if (!product) {
+        console.error('Product not found with ID:', productId);
+        return;
+    }
+
+    console.log('Found product:', product.name);
+
+    const cartProduct = {
+        id: product.id,
+        name: product.name,
+        variant: product.category,
+        price: product.price,
+        image: product.image
+    };
+
+    console.log('Calling window.addToCart with:', cartProduct);
+    window.addToCart(cartProduct);
 }
 
 // Initialize products on page load
@@ -224,3 +245,13 @@ window.addEventListener('load', () => {
         initializeProducts();
     }
 });
+
+// ============================================
+// EXPOSE FUNCTIONS GLOBALLY
+// ============================================
+
+// Make functions available globally for HTML onclick handlers
+window.addProductToCart = addProductToCart;
+window.renderProducts = renderProducts;
+window.initializeProducts = initializeProducts;
+window.setupCategoryFilters = setupCategoryFilters;

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Image from 'next/image';
 import { Trash2, Plus, Minus } from 'lucide-react';
-import { BulkOrderItem } from '@/types/bulkOrder';
+import { BulkOrderItem } from '@/src/types/bulkOrder';
 import { cn } from '@/lib/utils';
 
 interface BulkOrderItemRowProps {

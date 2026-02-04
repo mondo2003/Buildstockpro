@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { BulkOrder } from '@/types/bulkOrder';
+import { BulkOrder } from '@/src/types/bulkOrder';
 
 interface BulkOrderStatusBadgeProps {
   status: BulkOrder['status'];

@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Branch } from '@/types/merchantContact';
+import { Branch } from '@/src/types/merchantContact';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Slider } from '@/components/ui/slider';
 import { PostcodeLookup } from './PostcodeLookup';
 import { BranchCard } from './BranchCard';
-import { merchantContactApi } from '@/lib/api/merchantContact';
+import { merchantContactApi } from '@/src/lib/api/merchantContact';
 import { MapPin, Loader2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 

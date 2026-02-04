@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Package, Store, PoundSterling, MapPin } from 'lucide-react';
-import { BulkOrder, BulkOrderRetailer } from '@/types/bulkOrder';
+import { BulkOrder, BulkOrderRetailer } from '@/src/types/bulkOrder';
 import { cn } from '@/lib/utils';
 
 interface BulkOrderSummaryProps {

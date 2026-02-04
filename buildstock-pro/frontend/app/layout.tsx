@@ -6,9 +6,9 @@ import { Footer } from "@/components/Footer";
 import { CartProvider } from "@/context/CartContext";
 import { QuoteProvider } from "@/context/QuoteContext";
 import { SelectionProvider } from "@/contexts/SelectionContext";
-import { BulkOrderProvider } from "@/contexts/BulkOrderContext";
+import { BulkOrderProvider } from "@/src/contexts/BulkOrderContext";
 import { CartDrawer } from "@/components/CartDrawer";
-import { BulkOrderCart } from "@/components/bulk-orders/BulkOrderCart";
+import { BulkOrderCart } from "@/src/components/bulk-orders/BulkOrderCart";
 import { Toaster } from "sonner";
 
 const inter = Inter({

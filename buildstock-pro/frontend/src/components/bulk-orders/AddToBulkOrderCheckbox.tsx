@@ -1,7 +1,7 @@
 'use client';
 
 import { Checkbox } from '@/components/ui/checkbox';
-import { useBulkOrder } from '@/contexts/BulkOrderContext';
+import { useBulkOrder } from '@/src/contexts/BulkOrderContext';
 import { Check } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
