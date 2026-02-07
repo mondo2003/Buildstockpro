@@ -13,7 +13,7 @@ import { useCart } from '@/context/CartContext';
 import { toast } from 'sonner';
 import { formatDistance } from '@/hooks/useGeolocation';
 import { formatDistanceToNow } from 'date-fns';
-import { ContactMerchantButton } from '@/components/merchant-contact';
+import { ContactMerchantButton } from '@/src/components/merchant-contact';
 
 interface ProductCardProps {
   product: Product;
