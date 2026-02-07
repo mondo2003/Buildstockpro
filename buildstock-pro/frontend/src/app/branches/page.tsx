@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/card';
-import { BranchFinder } from '@/components/merchant-contact/BranchFinder';
+import { BranchFinder } from '@/src/components/merchant-contact/BranchFinder';
 import { MapPin, Search } from 'lucide-react';
 import { toast } from 'sonner';
 

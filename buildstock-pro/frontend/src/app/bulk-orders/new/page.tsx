@@ -4,14 +4,14 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BulkOrderSelector } from '@/components/bulk-orders/BulkOrderSelector';
-import { BulkOrderForm } from '@/components/bulk-orders/BulkOrderForm';
-import { useBulkOrder } from '@/contexts/BulkOrderContext';
+import { BulkOrderSelector } from '@/src/components/bulk-orders/BulkOrderSelector';
+import { BulkOrderForm } from '@/src/components/bulk-orders/BulkOrderForm';
+import { useBulkOrder } from '@/src/contextsBulkOrderContext';
 import { ArrowLeft, Package, Search } from 'lucide-react';
-import { bulkOrdersApi } from '@/lib/api/bulkOrders';
+import { bulkOrdersApi } from '@/src/lib/api/bulkOrders';
 import { toast } from 'sonner';
 import Link from 'next/link';
-import { api } from '@/lib/api';
+import { api } from '@/src/lib/api';
 
 export default function NewBulkOrderPage() {
   const router = useRouter();

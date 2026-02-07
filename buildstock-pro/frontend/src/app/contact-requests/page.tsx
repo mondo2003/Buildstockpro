@@ -1,13 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { MerchantContactRequest, ContactRequestsParams } from '@/types/merchantContact';
+import { MerchantContactRequest, ContactRequestsParams } from '@/src/types/merchantContact';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ContactRequestCard } from '@/components/merchant-contact/ContactRequestCard';
+import { ContactRequestCard } from '@/src/components/merchant-contact/ContactRequestCard';
 import { Loader2, MessageSquare, Filter } from 'lucide-react';
-import { merchantContactApi } from '@/lib/api/merchantContact';
+import { merchantContactApi } from '@/src/lib/api/merchantContact';
 import { toast } from 'sonner';
 
 const STATUS_FILTERS: { value: 'all' | 'pending' | 'sent' | 'responded' | 'resolved'; label: string }[] = [

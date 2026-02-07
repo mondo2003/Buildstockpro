@@ -1,6 +1,6 @@
 'use client';
 
-import { BulkOrderDetails } from '@/components/bulk-orders/BulkOrderDetails';
+import { BulkOrderDetails } from '@/src/components/bulk-orders/BulkOrderDetails';
 import { useParams } from 'next/navigation';
 
 export default function BulkOrderDetailsPage() {

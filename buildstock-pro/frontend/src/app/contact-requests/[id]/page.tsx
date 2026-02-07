@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { MerchantContactRequest } from '@/types/merchantContact';
+import { MerchantContactRequest } from '@/src/types/merchantContact';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { ContactRequestDetails } from '@/components/merchant-contact/ContactRequestDetails';
+import { ContactRequestDetails } from '@/src/components/merchant-contact/ContactRequestDetails';
 import { Loader2 } from 'lucide-react';
-import { merchantContactApi } from '@/lib/api/merchantContact';
+import { merchantContactApi } from '@/src/lib/api/merchantContact';
 import { toast } from 'sonner';
 
 export default function ContactRequestDetailsPage() {

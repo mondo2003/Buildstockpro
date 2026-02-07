@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
-import { BulkOrderCard } from '@/components/bulk-orders/BulkOrderCard';
-import { BulkOrderStatusBadge } from '@/components/bulk-orders/BulkOrderStatusBadge';
+import { BulkOrderCard } from '@/src/components/bulk-orders/BulkOrderCard';
+import { BulkOrderStatusBadge } from '@/src/components/bulk-orders/BulkOrderStatusBadge';
 import { Loader2, Search, Plus, Filter } from 'lucide-react';
-import { BulkOrder, BulkOrderSearchParams } from '@/types/bulkOrder';
+import { BulkOrder, BulkOrderSearchParams } from '@/src/types/bulkOrder';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 

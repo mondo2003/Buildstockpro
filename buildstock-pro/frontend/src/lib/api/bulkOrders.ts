@@ -9,7 +9,7 @@ import {
   AddOrderItemRequest,
   UpdateOrderItemRequest,
   BulkOrderRetailer,
-} from '@/types/bulkOrder';
+} from '@/src/types/bulkOrder';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
