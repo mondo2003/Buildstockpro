@@ -59,7 +59,7 @@ export function ContactForm({
   const [userPhone, setUserPhone] = useState('');
   const [userName, setUserName] = useState('');
   const [selectedBranch, setSelectedBranch] = useState<Branch | null>(null);
-  const [showBranchFinder, setShowBranchFinder] = useState(false);
+  const [internalShowBranchFinder, setInternalShowBranchFinder] = useState(false);
 
   // Pre-fill with user data from localStorage or session
   useEffect(() => {
@@ -289,7 +289,7 @@ export function ContactForm({
                       type="button"
                       variant="outline"
                       className="w-full"
-                      onClick={() => setShowBranchFinder(true)}
+                      onClick={() => setInternalShowBranchFinder(true)}
                     >
                       Find a Branch Near Me
                     </Button>
@@ -299,7 +299,7 @@ export function ContactForm({
                       merchantName={merchantName}
                       onSelectBranch={(branch) => {
                         setSelectedBranch(branch);
-                        setShowBranchFinder(false);
+                        setInternalShowBranchFinder(false);
                       }}
                     />
                   )}
